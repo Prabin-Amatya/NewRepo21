@@ -21,7 +21,7 @@ namespace IMS.Infrastructure.Entity_Configuration
             builder.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
             builder.Property(e => e.CreatedDate).IsUnicode(true).HasDefaultValueSql("GETDATE()").HasColumnType("DATETIME");
             builder.Property(e => e.CreatedBy).IsUnicode(true);
-            builder.Property(e => e.ModifiedDate).HasColumnType("DATETIME");
+            builder.Property(e => e.ModifiedDate).HasColumnType("DATETIME").IsRequired(false);
             builder.Property(e => e.ModifiedBy).IsUnicode(true);
 
         }

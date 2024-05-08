@@ -1,6 +1,8 @@
 ﻿using IMS.Infrastructure.IRepository;
 using IMS.Modes.Entity;
+using IMS.web.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IMS.web.Controllers
@@ -9,10 +11,13 @@ namespace IMS.web.Controllers
     public class StoreInfoController : Controller
     {
         private readonly ICrudService<StoreInfo> _storeCrudService;
-        public StoreInfoController(ICrudService<StoreInfo> storeCrudService)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public StoreInfoController(ICrudService<StoreInfo> storeCrudService, UserManager<ApplicationUser> userManager)
         {
             _storeCrudService = storeCrudService;
+            _userManager = userManager;
         }
+
         public async Task<IActionResult> Index()
         {
             var storeInfoList = await _storeCrudService.GetAllAsync();
@@ -31,12 +36,12 @@ namespace IMS.web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddEdit(StoreInfo storeInfo)
         {
+            var userId = _userManager.GetUserId(HttpContext.User);
             if (storeInfo.Id == 0)
             {
                 storeInfo.CreatedDate = DateTime.Now;
-                storeInfo.CreatedBy = "";
-                storeInfo.ModifiedDate = DateTime.Now;
-                storeInfo.ModifiedBy = "";
+                storeInfo.CreatedBy = userId;
+       
                 await _storeCrudService.InsertAsync(storeInfo);
             }
             else

@@ -25,7 +25,7 @@ namespace IMS.web.Migrations.IMSDb
                     IsActive = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "True"),
                     CreatedDate = table.Column<DateTime>(type: "DATETIME", nullable: false, defaultValueSql: "GETDATE()"),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ModifiedDate = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                    ModifiedDate = table.Column<DateTime>(type: "DATETIME", nullable: true),
                     ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>

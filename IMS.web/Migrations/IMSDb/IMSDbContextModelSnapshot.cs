@@ -55,7 +55,7 @@ namespace IMS.web.Migrations.IMSDb
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
+                    b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("DATETIME");
 
                     b.Property<string>("PanNo")

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IMS.web.Migrations.IMSDb
 {
     [DbContext(typeof(IMSDbContext))]
-    [Migration("20240503153649_init-table")]
+    [Migration("20240508152722_init-table")]
     partial class inittable
     {
         /// <inheritdoc />
@@ -58,7 +58,7 @@ namespace IMS.web.Migrations.IMSDb
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
+                    b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("DATETIME");
 
                     b.Property<string>("PanNo")
