@@ -1,0 +1,44 @@
+﻿
+@model IMS.Modes.Entity.StoreInfo
+
+@if(Model.Id == 0)
+{
+    <div>
+        <p>Create</p>
+    </div>
+}
+else{
+    <div>
+        <p>Update</p>
+    </div>}
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddEdit">
+
+            <label asp-for="StoreName" class="form-label"></label>
+            <input asp-for="StoreName" class="form-control" placeholder="@Model.StoreName" />
+
+            <label asp-for="Address" class="form-label"></label>
+            <input asp-for="Address" class="form-control" placeholder="@Model.Address" />
+
+            <label asp-for="PhoneNumber" class="form-label"></label>
+            <input asp-for="PhoneNumber" class="form-control" placeholder="@Model.PhoneNumber" />
+
+            <label asp-for="RegistrationNo" class="form-label"></label>
+            <input asp-for="RegistrationNo" class="form-control" placeholder="@Model.RegistrationNo" />
+
+            <label asp-for="PanNo" class="form-label"></label>
+            <input asp-for="PanNo" class="form-control" placeholder="@Model.PanNo" />
+
+           <label class="check-box">
+                <input type="checkbox" asp-for="IsActive" />
+                <span class="btn-check"></span>
+                <p class="terms" formation="">Is Active</p>
+            </label>
+            <br />
+            <input type="submit" value="AddEdit" class="btn-primary" />
+          
+        </form>
+    </div>
+</div>
