@@ -18,18 +18,22 @@ else{
 
             <label asp-for="StoreName" class="form-label"></label>
             <input asp-for="StoreName" class="form-control" placeholder="@Model.StoreName" />
+            <span asp-validation-for="StoreName" class="text-danger"></span>
 
             <label asp-for="Address" class="form-label"></label>
             <input asp-for="Address" class="form-control" placeholder="@Model.Address" />
+            <span asp-validation-for="Address" class="text-danger"></span><br />
 
             <label asp-for="PhoneNumber" class="form-label"></label>
             <input asp-for="PhoneNumber" class="form-control" placeholder="@Model.PhoneNumber" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span><br />
 
             <label asp-for="RegistrationNo" class="form-label"></label>
             <input asp-for="RegistrationNo" class="form-control" placeholder="@Model.RegistrationNo" />
+            <span asp-validation-for="RegistrationNo" class="text-danger"></span><br />
 
             <label asp-for="PanNo" class="form-label"></label>
-            <input asp-for="PanNo" class="form-control" placeholder="@Model.PanNo" />
+            <input asp-for="PanNo" class="form-control" placeholder="@Model.PanNo" /><br />
 
            <label class="check-box">
                 <input type="checkbox" asp-for="IsActive" />
@@ -42,3 +46,7 @@ else{
         </form>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
