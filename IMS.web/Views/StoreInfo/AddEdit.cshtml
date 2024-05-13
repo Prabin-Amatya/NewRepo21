@@ -15,34 +15,57 @@ else{
 <div class="row">
     <div class="col-md-4">
         <form asp-action="AddEdit">
+            <div class="form-group">
 
-            <label asp-for="StoreName" class="form-label"></label>
-            <input asp-for="StoreName" class="form-control" placeholder="@Model.StoreName" />
-            <span asp-validation-for="StoreName" class="text-danger"></span>
+                <label asp-for="StoreName" class="form-label"></label>
+                <input asp-for="StoreName" class="form-control" placeholder="@Model.StoreName" />
+                <span asp-validation-for="StoreName" class="text-danger"></span>
+            <div class="form-group">
 
-            <label asp-for="Address" class="form-label"></label>
-            <input asp-for="Address" class="form-control" placeholder="@Model.Address" />
-            <span asp-validation-for="Address" class="text-danger"></span><br />
 
-            <label asp-for="PhoneNumber" class="form-label"></label>
-            <input asp-for="PhoneNumber" class="form-control" placeholder="@Model.PhoneNumber" />
-            <span asp-validation-for="PhoneNumber" class="text-danger"></span><br />
+            <div class="form-group">
+                <label asp-for="Address" class="form-label"></label>
+                <input asp-for="Address" class="form-control" placeholder="@Model.Address" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            <div class="form-group">
 
-            <label asp-for="RegistrationNo" class="form-label"></label>
-            <input asp-for="RegistrationNo" class="form-control" placeholder="@Model.RegistrationNo" />
-            <span asp-validation-for="RegistrationNo" class="text-danger"></span><br />
 
-            <label asp-for="PanNo" class="form-label"></label>
-            <input asp-for="PanNo" class="form-control" placeholder="@Model.PanNo" /><br />
 
-           <label class="check-box">
-                <input type="checkbox" asp-for="IsActive" />
-                <span class="btn-check"></span>
-                <p class="terms" formation="">Is Active</p>
-            </label>
-            <br />
-            <input type="submit" value="AddEdit" class="btn-primary" />
-          
+             <div class="form-group">
+                <label asp-for="PhoneNumber" class="form-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" placeholder="@Model.PhoneNumber" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+             <div class="form-group">
+
+
+
+            <div class="form-group">
+                <label asp-for="RegistrationNo" class="form-label"></label>
+                <input asp-for="RegistrationNo" class="form-control" placeholder="@Model.RegistrationNo" />
+                <span asp-validation-for="RegistrationNo" class="text-danger"></span>
+             <div class="form-group">
+
+
+            <div class="form-group">
+                <label asp-for="PanNo" class="form-label"></label>
+                <input asp-for="PanNo" class="form-control" placeholder="@Model.PanNo" /><br />
+
+               <label class="check-box">
+                    <input type="checkbox" asp-for="IsActive" />
+                    <span class="btn-check"></span>
+                    <p class="terms" formation="">Is Active</p>
+                </label>
+                <div>
+                @if (Model.Id==0)
+                    {
+                        <input type="submit" value="Create" class="btn-primary" />
+                    }
+                    else
+                    {
+                        <input type="submit" value="Update" class="btn-primary" />
+                    }
+                </div>
+            </div>
         </form>
     </div>
 </div>

@@ -9,13 +9,14 @@ namespace IMS.Modes.Entity
 {
     public class StoreInfo:BaseEntity
     {
-        [Required]
-        [Display(Name="Store Name")]
+        [Required(ErrorMessage = "Please Input Store Name")]
+        [Display(Name="*Store Name")]
         public string StoreName { get; set; }
         [Required]
         public string Address { get; set; }
         [Required]
         [Phone]
+        [StringLength(20)]
         public string PhoneNumber { get; set; }
         [Required]
         public string RegistrationNo {  get; set; }
