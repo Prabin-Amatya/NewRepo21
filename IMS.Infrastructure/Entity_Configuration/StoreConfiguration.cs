@@ -6,7 +6,6 @@ using IMS.Modes.Entity;
 namespace IMS.Infrastructure.Entity_Configuration
 {
     public class StoreConfiguration : IEntityTypeConfiguration<StoreInfo>
-
     {
         public void Configure(EntityTypeBuilder<StoreInfo> builder)
         {

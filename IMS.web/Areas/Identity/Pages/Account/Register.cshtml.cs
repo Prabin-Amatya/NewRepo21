@@ -10,6 +10,8 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using IMS.Infrastructure.IRepository;
+using IMS.Modes.Entity;
 using IMS.web.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -17,6 +19,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 
@@ -29,6 +32,8 @@ namespace IMS.web.Areas.Identity.Pages.Account
         private readonly IUserStore<ApplicationUser> _userStore;
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
+        private readonly ICrudService<StoreInfo> _storeInfo;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
@@ -36,7 +41,9 @@ namespace IMS.web.Areas.Identity.Pages.Account
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender
+            IEmailSender emailSender,
+            ICrudService<StoreInfo> storeInfo,
+            RoleManager<IdentityRole> roleManager
             )
         {
             _userManager = userManager;
@@ -45,6 +52,8 @@ namespace IMS.web.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _storeInfo = storeInfo;
+            _roleManager = roleManager;
         }
 
         /// <summary>
@@ -64,6 +73,9 @@ namespace IMS.web.Areas.Identity.Pages.Account
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
+        /// 
+
+        public IEnumerable<StoreInfo> StoreInfos { get; set; }
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
         /// <summary>
@@ -109,7 +121,7 @@ namespace IMS.web.Areas.Identity.Pages.Account
             public string Address { get; set; }
             //public string PhoneNumber { get; set; }
             public int StoreId { get; set; }
-            public int UserRoleId { get; set; }
+            public string UserRoleId { get; set; }
             public string ProfileUrl { get; set; }
             public bool IsActive { get; set; }
             public string ProfilePicture { get; set; }
@@ -117,10 +129,14 @@ namespace IMS.web.Areas.Identity.Pages.Account
             public string CreatedBy { get; set; }
         }
 
-
+        public SelectList StoreInfoList { get; set; }
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
+            var storeInfoList = await _storeInfo.GetAllAsync();
+            StoreInfos = storeInfoList;
+            StoreInfoList = new SelectList(storeInfoList, "Id", "Name");
+
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
@@ -140,7 +156,8 @@ namespace IMS.web.Areas.Identity.Pages.Account
                 user.CreatedDate = DateTime.Now;
                 user.IsActive = true;
                
-
+                var role = _roleManager.FindByNameAsync(Input.UserRoleId).Result;
+                user.UserRoleId = role.Id;
 
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
@@ -149,6 +166,10 @@ namespace IMS.web.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
+                    if(role!=null) {
+                        IdentityResult roleresult = await _userManager.AddToRoleAsync(user, role.Name);
+                    }
+                   
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);

@@ -37,6 +37,25 @@
                 <label asp-for="Input.LastName">Last Name</label>
                 <span asp-validation-for="Input.LastName" class="text-danger"></span>
             </div>
+            <div class="form-floating">
+                <select asp-for="Input.StoreId" class="form-control" asp-items="@(new SelectList(Model.StoreInfos, "Id", "StoreName"))">
+                    <option selected disabled>-Choose-</option>
+                </select>
+                <label asp-for="Input.StoreId"></label>
+                
+            </div>
+            <div class="form-floating">
+                <select asp-for="Input.UserRoleId" class="form-control">
+                    <option selected disabled>-Choose-</option>
+                    <option value="SUPERADMIN">Superadmin</option>
+                    <option value="ADMIN">Admin</option>
+                    <option value="COUNTER">Counter</option>
+                    <option value="STORE">Store</option>
+                    <option value="PUBLIC">Public</option>
+                </select>
+                <label asp-for="Input.UserRoleId"></label>
+                
+            </div>
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </form>
     </div>
