@@ -23,6 +23,42 @@ namespace IMS.Infrastructure.Entity_Configuration
             builder.Property(e => e.ModifiedDate).HasColumnType("DATETIME").IsRequired(false);
             builder.Property(e => e.ModifiedBy).IsUnicode(true);
 
+            builder.HasMany(e => e.CategoryInfos)
+            .WithOne(e => e.StoreInfo)
+            .HasForeignKey(e => e.StoreInfoId);
+
+            builder.HasMany(e => e.CustomerInfos)
+            .WithOne(e => e.StoreInfo)
+            .HasForeignKey(e => e.StoreInfoId);
+
+            builder.HasMany(e => e.ProductInfos)
+            .WithOne(e => e.StoreInfo)
+            .HasForeignKey(e => e.StoreInfoId);
+
+            builder.HasMany(e => e.ProductRateInfos)
+            .WithOne(e => e.StoreInfo)
+            .HasForeignKey(e => e.StoreInfoId);
+
+            builder.HasMany(e => e.ProductInvoiceInfos)
+            .WithOne(e => e.StoreInfo)
+            .HasForeignKey(e => e.StoreInfoId);
+
+            builder.HasMany(e => e.RackInfos)
+            .WithOne(e => e.StoreInfo)
+            .HasForeignKey(e => e.StoreInfoId);
+
+            builder.HasMany(e => e.StockInfos)
+            .WithOne(e => e.StoreInfo)
+            .HasForeignKey(e => e.StoreInfoId);
+
+            builder.HasMany(e => e.SupplierInfos)
+            .WithOne(e => e.StoreInfo)
+            .HasForeignKey(e => e.StoreInfoId);
+
+            builder.HasMany(e => e.TransactionInfos)
+            .WithOne(e => e.StoreInfo)
+            .HasForeignKey(e => e.StoreInfoId);
         }
     }
+
 }

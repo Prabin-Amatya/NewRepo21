@@ -154,6 +154,7 @@ namespace IMS.web.Areas.Identity.Pages.Account
                 user.Address = Input.Address;
                 user.CreatedBy = "";
                 user.CreatedDate = DateTime.Now;
+               
                 user.IsActive = true;
                
                 var role = _roleManager.FindByNameAsync(Input.UserRoleId).Result;

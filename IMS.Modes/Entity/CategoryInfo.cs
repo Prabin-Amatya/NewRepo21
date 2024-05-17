@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace IMS.Modes.Entity
 {
-    
-        public class CategoryInfo : BaseEntity
-        {
-        public int CategoryInfoId { get; set; }
-        public int ProductInfoId { get; set; }
-        public int ProductRateInfoId { get; set; }
 
-        public float Quantity { get; set; }
+    public class CategoryInfo : BaseEntity
+    {
+     
+        public string CategoryName {  get; set; }
+        public string CategoryDescription {  get; set; }
+ 
 
         public int StoreInfoId { get; set; }
         public bool IsActive { get; set; }
@@ -27,6 +27,12 @@ namespace IMS.Modes.Entity
 
         public string? ModifiedBy { get; set; }
 
+        public virtual StoreInfo StoreInfo{get;set;}
+        public virtual ICollection<ProductInfo> ProductInfos { get; set; }
+        public virtual ICollection<ProductRateInfo> ProductRateInfos { get; set; }
+        public virtual ICollection<TransactionInfo> TransactionInfos { get; set; }
+
+        public virtual ICollection<StockInfo> StockInfos { get; set; }
 
     }
     }

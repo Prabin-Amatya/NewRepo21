@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,14 @@ namespace IMS.Modes.Entity
         public string CreatedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }
         public string ModifiedBy { get; set; }
-
+        public virtual ICollection<CategoryInfo> CategoryInfos {  get; set; }
+        public virtual ICollection<CustomerInfo> CustomerInfos { get; set; }
+        public virtual ICollection<ProductInfo> ProductInfos { get; set; }
+        public virtual ICollection<ProductRateInfo> ProductRateInfos { get; set; }
+        public virtual ICollection<ProductInvoiceInfo> ProductInvoiceInfos { get; set; }
+        public virtual ICollection<RackInfo> RackInfos { get; set; }
+        public virtual ICollection<StockInfo> StockInfos { get; set; }
+        public virtual ICollection<SupplierInfo> SupplierInfos { get; set; }
+        public virtual ICollection<TransactionInfo> TransactionInfos { get; set; }
     }
 }
