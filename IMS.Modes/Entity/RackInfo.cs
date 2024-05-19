@@ -24,6 +24,6 @@ namespace IMS.Modes.Entity
         public string? ModifiedBy { get; set; }
         public StoreInfo StoreInfo { get; set; }
 
-        public virtual ICollection<ProductInfo> ProductInfos { get; set; }
+        public virtual ICollection<ProductRateInfo> ProductRateInfos { get; set; }
     }
 }

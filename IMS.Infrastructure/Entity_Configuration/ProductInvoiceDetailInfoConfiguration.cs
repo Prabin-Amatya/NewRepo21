@@ -16,13 +16,13 @@ namespace IMS.Infrastructure.Entity_Configuration
         {
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id).ValueGeneratedOnAdd();
-            builder.Property(e => e.Rate).HasMaxLength(200).IsUnicode(true);
-            builder.Property(e => e.Quantity).HasMaxLength(50).IsUnicode(true);
+            builder.Property(e => e.Rate).IsUnicode(true).HasColumnType("float");
+            builder.Property(e => e.Quantity).IsUnicode(true).HasColumnType("float");
 
 
-            builder.Property(e => e.Amount).HasMaxLength(50).IsUnicode(true);
+            builder.Property(e => e.Amount).HasColumnType("float").IsUnicode(true);
           
-            builder.Property(e => e.CreatedDate).IsUnicode(true).HasDefaultValueSql("GETDATE()").HasColumnType("DATETIME");
+            builder.Property(e => e.CreatedDate).IsUnicode(true).HasDefaultValueSql("GETDATE()").HasColumnType("datetime");
             builder.Property(e => e.CreatedBy).IsUnicode(true);
 
             builder.HasOne(e => e.ProductInvoiceInfo)

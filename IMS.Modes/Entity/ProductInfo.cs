@@ -17,16 +17,6 @@ namespace IMS.Modes.Entity
         public int UnitInfoId { get; set; }
 
         public int StoreInfoId { get; set; }
-
-        public float Quantity { get; set; }
-        public float SoldQuantity { get; set; }
-
-        public float RemainingQuantity { get; set; }
-
-        public string BatchNo { get; set; }
-        public DateTime PurchasedDate { get; set; }
-
-        public DateTime ExpiryDate { get; set; }
         public int SupplierInfoId { get; set; }
 
 
@@ -46,9 +36,6 @@ namespace IMS.Modes.Entity
         public virtual StoreInfo StoreInfo { get; set; }
         public virtual CategoryInfo CategoryInfo { get; set; }
          
-        public virtual SupplierInfo SupplierInfo { get; set; }
-
-        public virtual RackInfo RackInfo { get; set; }
         public virtual ICollection<ProductRateInfo> ProductRateInfos { get; set; }
         public virtual ICollection<TransactionInfo> TransactionInfos { get; set; }
 

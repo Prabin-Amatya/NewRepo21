@@ -22,51 +22,6 @@ namespace IMS.web.Migrations.IMSDb
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("IMS.Modes.Entity.CategoryInfo", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CategoryInfoId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ProductInfoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductRateInfoId")
-                        .HasColumnType("int");
-
-                    b.Property<float>("Quantity")
-                        .HasColumnType("real");
-
-                    b.Property<int>("StoreInfoId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StoreInfoId");
-
-                    b.ToTable("CategoryInfo");
-                });
-
             modelBuilder.Entity("IMS.Modes.Entity.StoreInfo", b =>
                 {
                     b.Property<int>("Id")
@@ -76,7 +31,6 @@ namespace IMS.web.Migrations.IMSDb
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(50)");
@@ -110,42 +64,23 @@ namespace IMS.web.Migrations.IMSDb
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("RegistrationNo")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("StoreName")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("StoreInfo");
-                });
-
-            modelBuilder.Entity("IMS.Modes.Entity.CategoryInfo", b =>
-                {
-                    b.HasOne("IMS.Modes.Entity.StoreInfo", "StoreInfo")
-                        .WithMany("CategoryInfos")
-                        .HasForeignKey("StoreInfoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("StoreInfo");
-                });
-
-            modelBuilder.Entity("IMS.Modes.Entity.StoreInfo", b =>
-                {
-                    b.Navigation("CategoryInfos");
+                    b.ToTable("StoreInfo", (string)null);
                 });
 #pragma warning restore 612, 618
         }

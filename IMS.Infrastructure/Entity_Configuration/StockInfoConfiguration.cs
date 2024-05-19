@@ -15,12 +15,12 @@ namespace IMS.Infrastructure.Entity_Configuration
         {
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id).ValueGeneratedOnAdd();
-            builder.Property(e => e.Quantity).HasMaxLength(200).IsUnicode(true);
+            builder.Property(e => e.Quantity).IsUnicode(true).HasColumnType("float");
 
             builder.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
-            builder.Property(e => e.CreatedDate).IsUnicode(true).HasDefaultValueSql("GETDATE()").HasColumnType("DATETIME");
+            builder.Property(e => e.CreatedDate).IsUnicode(true).HasDefaultValueSql("GETDATE()").HasColumnType("datetime");
             builder.Property(e => e.CreatedBy).IsUnicode(true);
-            builder.Property(e => e.ModifiedDate).HasColumnType("DATETIME").IsRequired(false);
+            builder.Property(e => e.ModifiedDate).HasColumnType("datetime").IsRequired(false);
             builder.Property(e => e.ModifiedBy).IsUnicode(true);
 
 

@@ -16,20 +16,19 @@ namespace IMS.Infrastructure.Entity_Configuration
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id).ValueGeneratedOnAdd();
             builder.Property(e => e.PaymentMethod).HasMaxLength(200).IsUnicode(true);
-            builder.Property(e => e.InvoiceNo).HasMaxLength(50).IsUnicode(true);
-            builder.Property(e => e.TransactionDate).HasMaxLength(200).IsUnicode(true);
-            builder.Property(e => e.NetAmount).HasMaxLength(50).IsUnicode(true);
-            builder.Property(e => e.DiscountAmount).HasMaxLength(200).IsUnicode(true);
-            builder.Property(e => e.GrossAmount).HasMaxLength(50).IsUnicode(true);
-            builder.Property(e => e.TotalAmount).HasMaxLength(200).IsUnicode(true);
-            builder.Property(e => e.CancellationRemarks).HasMaxLength(50).IsUnicode(true);
-            builder.Property(e => e.BillStatus).HasMaxLength(200).IsUnicode(true);
-            builder.Property(e => e.Remarks).HasMaxLength(50).IsUnicode(true);
+            builder.Property(e => e.InvoiceNo).IsUnicode(true);
+            builder.Property(e => e.TransactionDate).IsUnicode(true).HasColumnType("datetime");
+            builder.Property(e => e.NetAmount).IsUnicode(true).HasColumnType("float");
+            builder.Property(e => e.DiscountAmount).IsUnicode(true).HasColumnType("float");
+            builder.Property(e => e.TotalAmount).IsUnicode(true).HasColumnType("float");
+            builder.Property(e => e.CancellationRemarks).IsUnicode(true);
+            builder.Property(e => e.BillStatus).IsUnicode(true);
+            builder.Property(e => e.Remarks).IsUnicode(true);
 
             builder.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
-            builder.Property(e => e.CreatedDate).IsUnicode(true).HasDefaultValueSql("GETDATE()").HasColumnType("DATETIME");
+            builder.Property(e => e.CreatedDate).IsUnicode(true).HasDefaultValueSql("GETDATE()").HasColumnType("datetime");
             builder.Property(e => e.CreatedBy).IsUnicode(true);
-            builder.Property(e => e.ModifiedDate).HasColumnType("DATETIME").IsRequired(false);
+            builder.Property(e => e.ModifiedDate).HasColumnType("datetime").IsRequired(false);
             builder.Property(e => e.ModifiedBy).IsUnicode(true);
 
             builder.HasOne(e => e.StoreInfo)

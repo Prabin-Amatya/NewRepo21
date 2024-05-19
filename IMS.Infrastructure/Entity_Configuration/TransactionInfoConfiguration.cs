@@ -16,9 +16,14 @@ namespace IMS.Infrastructure.Entity_Configuration
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id).ValueGeneratedOnAdd();
             builder.Property(e => e.TransactionType).HasMaxLength(200).IsUnicode(true);
-            builder.Property(e => e.Rate).HasMaxLength(50).IsUnicode(true);
-            builder.Property(e => e.Amount).HasMaxLength(50).IsUnicode(true);
-            builder.Property(e => e.Qualtity).HasMaxLength(50).IsUnicode(true);
+            builder.Property(e => e.Rate).IsUnicode(true).HasColumnType("float");
+            builder.Property(e => e.Amount).IsUnicode(true).HasColumnType("float");
+            builder.Property(e => e.Qualtity).IsUnicode(true).HasColumnType("float");
+            builder.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
+            builder.Property(e => e.CreatedDate).IsUnicode(true).HasDefaultValueSql("GETDATE()").HasColumnType("datetime");
+            builder.Property(e => e.CreatedBy).IsUnicode(true);
+            builder.Property(e => e.ModifiedDate).HasColumnType("datetime").IsRequired(false);
+            builder.Property(e => e.ModifiedBy).IsUnicode(true);
 
             builder.HasOne(e => e.CategoryInfo)
             .WithMany(e => e.TransactionInfos)
@@ -36,9 +41,10 @@ namespace IMS.Infrastructure.Entity_Configuration
            .WithMany(e => e.TransactionInfos)
            .HasForeignKey(e => e.StoreInfoId);
 
-            builder.HasMany(e => e.ProductRateInfos)
-            .WithOne(e => e.TransactionInfo)
-            .HasForeignKey(e => e.SupplierInfoId);
+            builder.HasOne(e => e.ProductRateInfo)
+           .WithMany(e => e.TransactionInfos)
+           .HasForeignKey(e => e.ProductRateInfoId);
 
-    }
+        }
+    } 
 }

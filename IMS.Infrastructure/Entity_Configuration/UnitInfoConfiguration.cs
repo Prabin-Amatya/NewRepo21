@@ -17,11 +17,6 @@ namespace IMS.Infrastructure.Entity_Configuration
             builder.Property(e => e.Id).ValueGeneratedOnAdd();
             builder.Property(e => e.UnitName).HasMaxLength(200).IsUnicode(true);
 
-            
-
-            builder.HasMany(e => e.ProductRateInfos)
-            .WithOne(e => e.UnitInfo)
-            .HasForeignKey(e => e.UnitInfoId);
 
             builder.HasMany(e => e.ProductInfos)
             .WithOne(e => e.UnitInfo)

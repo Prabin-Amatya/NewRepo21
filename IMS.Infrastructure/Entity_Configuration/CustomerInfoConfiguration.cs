@@ -22,7 +22,7 @@ namespace IMS.Infrastructure.Entity_Configuration
             builder.Property(e => e.Address).HasMaxLength(50).IsUnicode(true);
 
             builder.Property(e => e.PanNo).HasMaxLength(50).IsUnicode(true);
-            builder.Property(e => e.CreatedDate).IsUnicode(true).HasDefaultValueSql("GETDATE()").HasColumnType("DATETIME");
+            builder.Property(e => e.CreatedDate).IsUnicode(true).HasDefaultValueSql("GETDATE()").HasColumnType("datetime");
             builder.Property(e => e.CreatedBy).IsUnicode(true);
 
             builder.HasOne(e => e.StoreInfo)

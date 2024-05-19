@@ -16,12 +16,12 @@ namespace IMS.Infrastructure.Entity_Configuration
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id).ValueGeneratedOnAdd();
             builder.Property(e => e.CategoryName).HasMaxLength(200).IsUnicode(true);
-            builder.Property(e => e.CategoryDescription).HasMaxLength(50).IsUnicode(true);
+            builder.Property(e => e.CategoryDescription).IsUnicode(true);
          
             builder.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
-            builder.Property(e => e.CreatedDate).IsUnicode(true).HasDefaultValueSql("GETDATE()").HasColumnType("DATETIME");
+            builder.Property(e => e.CreatedDate).IsUnicode(true).HasDefaultValueSql("GETDATE()").HasColumnType("datetime");
             builder.Property(e => e.CreatedBy).IsUnicode(true);
-            builder.Property(e => e.ModifiedDate).HasColumnType("DATETIME").IsRequired(false);
+            builder.Property(e => e.ModifiedDate).HasColumnType("datetime").IsRequired(false);
             builder.Property(e => e.ModifiedBy).IsUnicode(true);
 
             builder.HasOne(e => e.StoreInfo)
@@ -39,6 +39,10 @@ namespace IMS.Infrastructure.Entity_Configuration
             builder.HasMany(e => e.TransactionInfos)
                 .WithOne(e => e.CategoryInfo)
                 .HasForeignKey(e => e.CategoryInfoId);
+
+            builder.HasMany(e => e.StockInfos)
+               .WithOne(e => e.CategoryInfo)
+               .HasForeignKey(e => e.CategoryInfoId);
 
 
         }

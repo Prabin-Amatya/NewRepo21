@@ -15,7 +15,6 @@ namespace IMS.Modes.Entity
         public DateTime TransactionDate { get; set; }
         public double NetAmount { get; set; }
         public double DiscountAmount { get; set; }
-        public double GrossAmount { get; set; }
         public double TotalAmount { get; set; }
         public string Remarks { get; set; }
         public int BillStatus { get; set; }

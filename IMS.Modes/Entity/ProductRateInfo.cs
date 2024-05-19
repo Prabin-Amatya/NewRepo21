@@ -10,7 +10,6 @@ namespace IMS.Modes.Entity
     {
         public int CategoryInfoId {  get; set; }
         public int ProductInfoId { get; set; }
-        public int UnitInfoId {  get; set; }
         public int StoreInfoId {  get; set; }
 
         public float CostPrice {  get; set; }
@@ -22,7 +21,7 @@ namespace IMS.Modes.Entity
         public int SupplierInfoId {  get; set; }
         public DateTime PurchasedDate {  get; set; }
         public DateTime ExpiryDate { get; set; }
-        public int RankInfoId {  get; set; }
+        public int RackInfoId {  get; set; }
 
         public bool IsActive { get; set; }
 
@@ -36,9 +35,10 @@ namespace IMS.Modes.Entity
         public string? ModifiedBy { get; set; }
         public virtual ICollection<ProductInvoiceDetailInfo> ProductInvoiceDetailInfos { get; set; }
 
+        public virtual ICollection <TransactionInfo> TransactionInfos { get; set; }
         public virtual ICollection<StockInfo> StockInfos { get; set; }
         public virtual CategoryInfo CategoryInfo { get; set; }
-        public virtual UnitInfo UnitInfo { get; set; }
+        public virtual RackInfo RackInfo { get; set; }
         public virtual ProductInfo ProductInfo { get; set; }
         public virtual StoreInfo StoreInfo { get; set; }
         public virtual SupplierInfo SupplierInfo { get; set; }

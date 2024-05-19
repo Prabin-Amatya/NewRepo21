@@ -11,12 +11,20 @@ namespace IMS.Modes.Entity
         public string TransactionType { get; set; }
         public int CategoryInfoId {  get; set; }
         public int ProductInfoId { get; set; }
+        public int ProductRateInfoId { get; set; }
         public int UnitInfoId { get; set; }
         public int StoreInfoId { get; set; }
         public float Rate {  get; set; }
         public double Amount {  get; set; }
         public float Qualtity { get; set; }
-        public virtual ICollection<ProductRateInfo> ProductRateInfos { get; set; }
+
+        public string IsActive { get; set; }
+        public DateTime CreatedDate { get; set; }
+
+        public string CreatedBy { get; set; }
+        public DateTime? ModifiedDate { get; set; }
+        public string ModifiedBy { get; set; }
+        public virtual ProductRateInfo ProductRateInfo { get; set; }
         public virtual CategoryInfo CategoryInfo { get; set; }
         public virtual ProductInfo ProductInfo { get; set; }
         public virtual UnitInfo UnitInfo { get; set; }
