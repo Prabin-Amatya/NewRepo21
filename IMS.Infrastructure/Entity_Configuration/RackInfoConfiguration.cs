@@ -15,7 +15,7 @@ namespace IMS.Infrastructure.Entity_Configuration
         {
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id).ValueGeneratedOnAdd();
-            builder.Property(e => e.RackName).HasMaxLength(200).IsUnicode(true);
+            builder.Property(e => e.RackName).HasMaxLength(200).IsUnicode(true).IsRequired();
 
             builder.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
             builder.Property(e => e.CreatedDate).IsUnicode(true).HasDefaultValueSql("GETDATE()").HasColumnType("datetime");
@@ -23,10 +23,11 @@ namespace IMS.Infrastructure.Entity_Configuration
             builder.Property(e => e.ModifiedDate).HasColumnType("datetime").IsRequired(false);
             builder.Property(e => e.ModifiedBy).IsUnicode(true);
 
-          
+
             builder.HasOne(e => e.StoreInfo)
                 .WithMany(e => e.RackInfos)
-                .HasForeignKey(e => e.StoreInfoId);
+                .HasForeignKey(e => e.StoreInfoId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(e => e.ProductRateInfos)
                 .WithOne(e => e.RackInfo)

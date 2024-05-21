@@ -1,0 +1,47 @@
+﻿
+@model IMS.Modes.Entity.CategoryInfo
+
+@if(Model.Id == 0)
+{
+    <div>
+        <p>Create</p>
+    </div>
+}
+else{
+    <div>
+        <p>Update</p>
+    </div>}
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddEdit">
+            <div class="form-group">
+
+                <label asp-for="CategoryName" class="form-label"></label>
+                <input asp-for="CategoryName" class="form-control" placeholder="@Model.CategoryName" />
+                <span asp-validation-for="CategoryName" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="CategoryDescription" class="form-label"></label>
+                <input asp-for="CategoryDescription" class="form-control" placeholder="@Model.CategoryDescription" />
+                <span asp-validation-for="CategoryDescription" class="text-danger"></span>
+            </div>
+           
+                @if (Model.Id==0)
+                    {
+                        <input type="submit" value="Create" class="btn-primary" />
+                    }
+                    else
+                    {
+                        <input type="submit" value="Update" class="btn-primary" />
+                    }
+              
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

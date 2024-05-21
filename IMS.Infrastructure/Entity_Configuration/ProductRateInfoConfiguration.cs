@@ -16,14 +16,14 @@ namespace IMS.Infrastructure.Entity_Configuration
         {
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id).ValueGeneratedOnAdd();
-            builder.Property(e => e.CostPrice).IsUnicode(true).HasColumnType("float");
-            builder.Property(e => e.RemainingQuantity).IsUnicode(true).HasColumnType("float");
-            builder.Property(e => e.BatchNo).IsUnicode(true);
-            builder.Property(e => e.SellingPrice).IsUnicode(true).HasColumnType("float");
-            builder.Property(e => e.Quantity).IsUnicode(true).HasColumnType("float");
-            builder.Property(e => e.SoldQuantity).IsUnicode(true).HasColumnType("float");
-            builder.Property(e => e.PurchasedDate).IsUnicode(true).HasColumnType("datetime");
-            builder.Property(e => e.ExpiryDate).IsUnicode(true).HasColumnType("datetime");
+            builder.Property(e => e.CostPrice).IsUnicode(true).HasColumnType("float").IsRequired();
+            builder.Property(e => e.RemainingQuantity).IsUnicode(true).HasColumnType("float").IsRequired();
+            builder.Property(e => e.BatchNo).IsUnicode(true).IsRequired();
+            builder.Property(e => e.SellingPrice).IsUnicode(true).HasColumnType("float").IsRequired();
+            builder.Property(e => e.Quantity).IsUnicode(true).HasColumnType("float").IsRequired();
+            builder.Property(e => e.SoldQuantity).IsUnicode(true).HasColumnType("float").IsRequired();
+            builder.Property(e => e.PurchasedDate).IsUnicode(true).HasColumnType("datetime").IsRequired();
+            builder.Property(e => e.ExpiryDate).IsUnicode(true).HasColumnType("datetime").IsRequired();
 
             builder.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
             builder.Property(e => e.CreatedDate).IsUnicode(true).HasDefaultValueSql("GETDATE()").HasColumnType("datetime");
@@ -33,23 +33,31 @@ namespace IMS.Infrastructure.Entity_Configuration
 
             builder.HasOne(e => e.CategoryInfo)
                 .WithMany(e => e.ProductRateInfos)
-                .HasForeignKey(e => e.CategoryInfoId);
+                .HasForeignKey(e => e.CategoryInfoId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(e => e.RackInfo)
                 .WithMany(e => e.ProductRateInfos)
-                .HasForeignKey(e => e.RackInfoId);
+                .HasForeignKey(e => e.RackInfoId)
+                .OnDelete(DeleteBehavior.Restrict);
+
 
             builder.HasOne(e => e.ProductInfo)
                .WithMany(e => e.ProductRateInfos)
-               .HasForeignKey(e => e.ProductInfoId);
+               .HasForeignKey(e => e.ProductInfoId)
+               .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(e => e.StoreInfo)
                 .WithMany(e => e.ProductRateInfos)
-                .HasForeignKey(e => e.StoreInfoId);
+                .HasForeignKey(e => e.StoreInfoId)
+                .OnDelete(DeleteBehavior.Restrict);
+            ;
 
             builder.HasOne(e => e.SupplierInfo)
                 .WithMany(e => e.ProductRateInfos)
-                .HasForeignKey(e => e.SupplierInfoId);
+                .HasForeignKey(e => e.SupplierInfoId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
 
             builder.HasMany(e => e.ProductInvoiceDetailInfos)
                 .WithOne(e => e.ProductRateInfo)

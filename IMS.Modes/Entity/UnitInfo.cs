@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -9,6 +10,8 @@ namespace IMS.Modes.Entity
 {
     public class UnitInfo:BaseEntity
     {
+
+        [Required]
         public string UnitName {  get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedDate { get; set; }

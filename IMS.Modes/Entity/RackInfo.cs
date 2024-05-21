@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ namespace IMS.Modes.Entity
 {
     public class RackInfo:BaseEntity
     {
+
+        [Required]
         public string RackName { get; set; }
 
         public int StoreInfoId { get; set; }

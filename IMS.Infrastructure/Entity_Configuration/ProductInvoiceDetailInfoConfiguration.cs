@@ -16,21 +16,23 @@ namespace IMS.Infrastructure.Entity_Configuration
         {
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id).ValueGeneratedOnAdd();
-            builder.Property(e => e.Rate).IsUnicode(true).HasColumnType("float");
-            builder.Property(e => e.Quantity).IsUnicode(true).HasColumnType("float");
+            builder.Property(e => e.Rate).IsUnicode(true).HasColumnType("float").IsRequired();
+            builder.Property(e => e.Quantity).IsUnicode(true).HasColumnType("float").IsRequired();
 
 
-            builder.Property(e => e.Amount).HasColumnType("float").IsUnicode(true);
+            builder.Property(e => e.Amount).HasColumnType("float").IsUnicode(true).IsRequired();
           
             builder.Property(e => e.CreatedDate).IsUnicode(true).HasDefaultValueSql("GETDATE()").HasColumnType("datetime");
             builder.Property(e => e.CreatedBy).IsUnicode(true);
 
             builder.HasOne(e => e.ProductInvoiceInfo)
                 .WithMany(e => e.ProductInvoiceDetailInfos)
-                .HasForeignKey(e => e.ProductInvoiceInfoId);
+                .HasForeignKey(e => e.ProductInvoiceInfoId)
+                .OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(e => e.ProductRateInfo)
                 .WithMany(e => e.ProductInvoiceDetailInfos)
-                .HasForeignKey(e => e.ProductRateInfoId);
+                .HasForeignKey(e => e.ProductRateInfoId)
+                .OnDelete(DeleteBehavior.Restrict); 
             
 
 

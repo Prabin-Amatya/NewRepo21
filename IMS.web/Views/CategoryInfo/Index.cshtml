@@ -1,4 +1,4 @@
-﻿@model IEnumerable<IMS.Modes.Entity.StoreInfo>
+﻿@model IEnumerable<IMS.Modes.Entity.CategoryInfo>
 
 <div class="row">
     <div class="col-12">
@@ -10,10 +10,8 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>@Html.DisplayNameFor(p => p.StoreName)</th>
-                <th>@Html.DisplayNameFor(p => p.Address)</th>
-                <th>@Html.DisplayNameFor(p => p.PhoneNumber)</th>
-                <th>@Html.DisplayNameFor(p => p.RegistrationNo)</th>
+                <th>@Html.DisplayNameFor(p => p.CategoryName)</th>
+                <th>@Html.DisplayNameFor(p => p.CategoryDescription)</th>
                 <th>@Html.DisplayNameFor(p => p.IsActive)</th>
                 <th>Action</th>
             </tr>
@@ -22,10 +20,8 @@
             @foreach(var items in Model)
             {
             <tr>
-                <td>@items.StoreName</td>
-                <td>@items.Address</td>
-                <td>@items.PhoneNumber</td>
-                <td>@items.RegistrationNo</td>
+                <td>@items.CategoryName</td>
+                <td>@items.CategoryDescription</td>
                 <td>@items.IsActive</td>
                 <td>
                     <a class="btn btn-primary" asp-action="AddEdit" asp-route-id="@items.Id">Edit</a>

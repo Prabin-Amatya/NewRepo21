@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,11 +9,17 @@ namespace IMS.Modes.Entity
 {
     public class ProductInfo:BaseEntity
     {
+
         public int CategoryInfoId { get; set; }
+
+        [Required]
 
         public string ProductName { get; set; }
 
+        [Required]
+
         public string ProductDescription { get; set; }
+
 
         public int UnitInfoId { get; set; }
 
@@ -21,6 +28,7 @@ namespace IMS.Modes.Entity
 
 
         public int RackInfoId { get; set; }
+
         public string ImageUrl { get; set; }
 
         public bool IsActive { get; set; }

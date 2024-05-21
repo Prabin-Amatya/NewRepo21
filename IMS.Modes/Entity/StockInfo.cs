@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace IMS.Modes.Entity
         public int ProductInfoId { get; set; }
         public int ProductRateInfoId { get; set; }
 
+        [Required]
         public float Quantity { get; set; }
 
         public int StoreInfoId { get; set; }

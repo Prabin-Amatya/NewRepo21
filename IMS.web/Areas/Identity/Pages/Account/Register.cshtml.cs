@@ -159,6 +159,7 @@ namespace IMS.web.Areas.Identity.Pages.Account
                
                 var role = _roleManager.FindByNameAsync(Input.UserRoleId).Result;
                 user.UserRoleId = role.Id;
+                user.StoreId = Input.StoreId;
 
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);

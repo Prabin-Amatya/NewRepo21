@@ -15,15 +15,15 @@ namespace IMS.Infrastructure.Entity_Configuration
         {
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id).ValueGeneratedOnAdd();
-            builder.Property(e => e.PaymentMethod).HasMaxLength(200).IsUnicode(true);
-            builder.Property(e => e.InvoiceNo).IsUnicode(true);
-            builder.Property(e => e.TransactionDate).IsUnicode(true).HasColumnType("datetime");
-            builder.Property(e => e.NetAmount).IsUnicode(true).HasColumnType("float");
+            builder.Property(e => e.PaymentMethod).HasMaxLength(200).IsUnicode(true).IsRequired();
+            builder.Property(e => e.InvoiceNo).IsUnicode(true).IsRequired();
+            builder.Property(e => e.TransactionDate).IsUnicode(true).HasColumnType("datetime").IsRequired();
+            builder.Property(e => e.NetAmount).IsUnicode(true).HasColumnType("float").IsRequired();
             builder.Property(e => e.DiscountAmount).IsUnicode(true).HasColumnType("float");
-            builder.Property(e => e.TotalAmount).IsUnicode(true).HasColumnType("float");
+            builder.Property(e => e.TotalAmount).IsUnicode(true).HasColumnType("float").IsRequired();
             builder.Property(e => e.CancellationRemarks).IsUnicode(true);
             builder.Property(e => e.BillStatus).IsUnicode(true);
-            builder.Property(e => e.Remarks).IsUnicode(true);
+            builder.Property(e => e.Remarks).IsUnicode(true).IsRequired();
 
             builder.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
             builder.Property(e => e.CreatedDate).IsUnicode(true).HasDefaultValueSql("GETDATE()").HasColumnType("datetime");
@@ -33,11 +33,13 @@ namespace IMS.Infrastructure.Entity_Configuration
 
             builder.HasOne(e => e.StoreInfo)
                 .WithMany(e => e.ProductInvoiceInfos)
-                .HasForeignKey(e => e.StoreInfoId);
+                .HasForeignKey(e => e.StoreInfoId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(e => e.CustomerInfo)
                 .WithMany(e => e.ProductInvoiceInfos)
-                .HasForeignKey(e => e.CustomerInfoId);
+                .HasForeignKey(e => e.CustomerInfoId)
+                .OnDelete(DeleteBehavior.Restrict); 
 
             builder.HasMany(e => e.ProductInvoiceDetailInfos)
                 .WithOne(e => e.ProductInvoiceInfo)

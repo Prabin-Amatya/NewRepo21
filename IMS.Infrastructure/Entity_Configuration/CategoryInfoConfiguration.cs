@@ -15,7 +15,7 @@ namespace IMS.Infrastructure.Entity_Configuration
         {
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id).ValueGeneratedOnAdd();
-            builder.Property(e => e.CategoryName).HasMaxLength(200).IsUnicode(true);
+            builder.Property(e => e.CategoryName).HasMaxLength(200).IsUnicode(true).IsRequired();
             builder.Property(e => e.CategoryDescription).IsUnicode(true);
          
             builder.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
@@ -26,15 +26,16 @@ namespace IMS.Infrastructure.Entity_Configuration
 
             builder.HasOne(e => e.StoreInfo)
                 .WithMany(e => e.CategoryInfos)
-                .HasForeignKey(e => e.StoreInfoId);
+                .HasForeignKey(e => e.StoreInfoId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(e => e.ProductRateInfos)
                 .WithOne(e => e.CategoryInfo)
                 .HasForeignKey(e => e.CategoryInfoId);
 
             builder.HasMany(e => e.ProductInfos)
-                .WithOne(e => e.CategoryInfo)
-                .HasForeignKey(e => e.CategoryInfoId);
+               .WithOne(e => e.CategoryInfo)
+               .HasForeignKey(e => e.CategoryInfoId);
 
             builder.HasMany(e => e.TransactionInfos)
                 .WithOne(e => e.CategoryInfo)
@@ -43,6 +44,8 @@ namespace IMS.Infrastructure.Entity_Configuration
             builder.HasMany(e => e.StockInfos)
                .WithOne(e => e.CategoryInfo)
                .HasForeignKey(e => e.CategoryInfoId);
+               
+
 
 
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,15 +9,31 @@ namespace IMS.Modes.Entity
 {
     public class ProductInvoiceInfo:BaseEntity
     {
+
+        [Required]
         public int PaymentMethod {  get; set; }
+
+        [Required]
         public string InvoiceNo {  get; set; }
+
+        [Required]
         public int StoreInfoId { get; set; }
+
         public int CustomerInfoId { get; set; }
+
+        [Required]
         public DateTime TransactionDate { get; set; }
-        public double NetAmount { get; set; }
-        public double DiscountAmount { get; set; }
-        public double TotalAmount { get; set; }
+
+        [Required]
+        public float NetAmount { get; set; }
+
+        [Required]
+        public float DiscountAmount { get; set; }
+
+        [Required]
+        public float TotalAmount { get; set; }
         public string Remarks { get; set; }
+
         public int BillStatus { get; set; }
         public string CancellationRemarks {  get; set; }
         public bool IsActive { get; set; }

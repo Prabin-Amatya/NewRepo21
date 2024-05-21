@@ -15,11 +15,11 @@ namespace IMS.Infrastructure.Entity_Configuration
         {
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id).ValueGeneratedOnAdd();
-            builder.Property(e => e.SupplierName).HasMaxLength(200).IsUnicode(true);
-            builder.Property(e => e.Address).HasMaxLength(50).IsUnicode(true);
-            builder.Property(e => e.PhoneNumber).HasMaxLength(50).IsUnicode(true);
-            builder.Property(e => e.ContactPerson).HasMaxLength(50).IsUnicode(true);
-            builder.Property(e => e.Email).HasMaxLength(50).IsUnicode(true);
+            builder.Property(e => e.SupplierName).HasMaxLength(200).IsUnicode(true).IsRequired();
+            builder.Property(e => e.Address).HasMaxLength(50).IsUnicode(true).IsRequired();
+            builder.Property(e => e.PhoneNumber).HasMaxLength(50).IsUnicode(true).IsRequired();
+            builder.Property(e => e.ContactPerson).HasMaxLength(50).IsUnicode(true).IsRequired();
+            builder.Property(e => e.Email).HasMaxLength(50).IsUnicode(true).IsRequired();
             builder.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
             builder.Property(e => e.CreatedDate).IsUnicode(true).HasDefaultValueSql("GETDATE()").HasColumnType("datetime");
             builder.Property(e => e.CreatedBy).IsUnicode(true);
@@ -28,7 +28,8 @@ namespace IMS.Infrastructure.Entity_Configuration
 
             builder.HasOne(e => e.StoreInfo)
             .WithMany(e => e.SupplierInfos)
-            .HasForeignKey(e => e.StoreInfoId);
+            .HasForeignKey(e => e.StoreInfoId)
+            .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(e => e.ProductRateInfos)
             .WithOne(e => e.SupplierInfo)
