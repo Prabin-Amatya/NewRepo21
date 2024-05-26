@@ -1,4 +1,4 @@
-﻿@model IEnumerable<IMS.Modes.Entity.StoreInfo>
+﻿@model IEnumerable<IMS.Modes.Entity.CustomerInfo>
 
 <div class="row">
     <div class="col-12">
@@ -10,12 +10,11 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>@Html.DisplayNameFor(p => p.StoreName)</th>
-                <th>@Html.DisplayNameFor(p => p.Address)</th>
+                <th>@Html.DisplayNameFor(p => p.CustomerName)</th>
                 <th>@Html.DisplayNameFor(p => p.PhoneNumber)</th>
-                <th>@Html.DisplayNameFor(p => p.RegistrationNo)</th>
+                <th>@Html.DisplayNameFor(p => p.Address)</th>
+                <th>@Html.DisplayNameFor(p => p.Email)</th>
                 <th>@Html.DisplayNameFor(p => p.PanNo)</th>
-                <th>@Html.DisplayNameFor(p => p.IsActive)</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -23,12 +22,11 @@
             @foreach(var items in Model)
             {
             <tr>
-                <td>@items.StoreName</td>
-                <td>@items.Address</td>
+                <td>@items.CustomerName</td>
                 <td>@items.PhoneNumber</td>
-                <td>@items.RegistrationNo</td>
+                <td>@items.Address</td>
+                <td>@items.Email</td>
                 <td>@items.PanNo</td>
-                <td>@items.IsActive</td>
                 <td>
                     <a class="btn btn-primary" asp-action="AddEdit" asp-route-id="@items.Id">Edit</a>
                     <a class="btn btn-primary btn-danger" asp-action="Remove" asp-route-id="@items.Id">Delete</a>

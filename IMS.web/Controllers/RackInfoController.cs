@@ -7,16 +7,16 @@ using System.Collections.Generic;
 
 namespace IMS.web.Controllers
 {
-    public class ProductInvoiceInfoController : Controller
+    public class RackInfoController : Controller
     {
         public readonly ICrudService<StoreInfo> _storeInfo;
-        public readonly ICrudService<CategoryInfo> _categoryInfo;
+        public readonly ICrudService<RackInfo> _rackInfo;
         public readonly UserManager<ApplicationUser> _userManager;
 
-        public ProductInvoiceInfoController(ICrudService<StoreInfo> storeInfo, ICrudService<CategoryInfo> categoryInfo, UserManager<ApplicationUser> userManager)
+        public RackInfoController(ICrudService<StoreInfo> storeInfo, ICrudService<RackInfo> rackInfo, UserManager<ApplicationUser> userManager)
         {
             _storeInfo = storeInfo;
-            _categoryInfo = categoryInfo;
+            _rackInfo = rackInfo;
             _userManager = userManager;
         }
 
@@ -25,22 +25,23 @@ namespace IMS.web.Controllers
             var userId = _userManager.GetUserId(HttpContext.User);
             var user = await _userManager.FindByIdAsync(userId);
             var storeInfo = await _storeInfo.GetAsync(user.StoreId);
-            var categories = await _categoryInfo.GetAllAsync(p => p.StoreInfoId == storeInfo.Id);
+            var categories = await _rackInfo.GetAllAsync(p => p.StoreInfoId == storeInfo.Id);
             return View(categories);
         }
         public async Task<IActionResult> AddEdit(int id)
         {
-            CategoryInfo categoryInfo = new CategoryInfo();
-            categoryInfo.IsActive = true;
+            RackInfo rackInfo = new RackInfo();
+            rackInfo.IsActive = true;
             if (id > 0)
             {
-                categoryInfo = await _categoryInfo.GetAsync(id);
+                rackInfo = await _rackInfo.GetAsync(id);
             }
-            return View(categoryInfo);
+            return View(rackInfo);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddEdit(CategoryInfo categoryInfo)
+
+        public async Task<IActionResult> AddEdit(RackInfo rackInfo)
         {
             if (ModelState.IsValid)
             {
@@ -48,27 +49,26 @@ namespace IMS.web.Controllers
                 {
                     var userId = _userManager.GetUserId(HttpContext.User);
                     var user = await _userManager.FindByIdAsync(userId);
-                    if (categoryInfo.Id == 0)
+                    if (rackInfo.Id == 0)
                     {
 
-                        categoryInfo.IsActive = true;
-                        categoryInfo.CreatedDate = DateTime.Now;
-                        categoryInfo.CreatedBy = userId;
-                        categoryInfo.StoreInfoId = user.StoreId;
-                        await _categoryInfo.InsertAsync(categoryInfo);
+                        rackInfo.IsActive = true;
+                        rackInfo.CreatedDate = DateTime.Now;
+                        rackInfo.CreatedBy = userId;
+                        rackInfo.StoreInfoId = user.StoreId;
+                        await _rackInfo.InsertAsync(rackInfo);
                         TempData["success"] = "Data Added Successfully";
                     }
                     else
                     {
-                        var OrgStoreInfo = await _categoryInfo.GetAsync(categoryInfo.Id);
-                        OrgStoreInfo.CategoryName = categoryInfo.CategoryName;
-                        OrgStoreInfo.CategoryDescription = categoryInfo.CategoryDescription;
-                        OrgStoreInfo.IsActive = categoryInfo.IsActive;
+                        var OrgStoreInfo = await _rackInfo.GetAsync(rackInfo.Id);
+                        OrgStoreInfo.RackName = rackInfo.RackName;
+                        OrgStoreInfo.IsActive = rackInfo.IsActive;
                         OrgStoreInfo.ModifiedDate = DateTime.Now;
                         OrgStoreInfo.ModifiedBy = "";
                         OrgStoreInfo.StoreInfoId = user.StoreId;
 
-                        await _categoryInfo.UpdateAsync(OrgStoreInfo);
+                        await _rackInfo.UpdateAsync(OrgStoreInfo);
                         TempData["success"] = "Data Updated Successfully";
 
                     }
@@ -89,13 +89,13 @@ namespace IMS.web.Controllers
 
         public async Task<IActionResult> Remove(int id)
         {
-            return View(await _categoryInfo.GetAsync(id));
+            return View(await _rackInfo.GetAsync(id));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Remove(CategoryInfo categoryInfo)
+        public async Task<IActionResult> Remove(RackInfo rackInfo)
         {
-            await _categoryInfo.DeleteAsync(categoryInfo);
+            _rackInfo.Delete(rackInfo);
             TempData["error"] = "Data Deleted Successfully";
             return RedirectToAction(nameof(Index));
 

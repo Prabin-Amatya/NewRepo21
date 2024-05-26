@@ -1,0 +1,68 @@
+﻿
+@model IMS.Modes.Entity.CustomerInfo
+
+@if(Model.Id == 0)
+{
+    <div>
+        <p>Create</p>
+    </div>
+}
+else{
+    <div>
+        <p>Update</p>
+    </div>}
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddEdit">
+            <div class="form-group">
+
+                <label asp-for="CustomerName" class="form-label"></label>
+                <input asp-for="CustomerName" class="form-control" placeholder="@Model.CustomerName" />
+                <span asp-validation-for="CustomerName" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+
+                <label asp-for="PhoneNumber" class="form-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" placeholder="@Model.PhoneNumber" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+
+                <label asp-for="Address" class="form-label"></label>
+                <input asp-for="Address" class="form-control" placeholder="@Model.Address" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" placeholder="@Model.Email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+
+                <label asp-for="PanNo" class="form-label"></label>
+                <input asp-for="PanNo" class="form-control" placeholder="@Model.PanNo" />
+                <span asp-validation-for="PanNo" class="text-danger"></span>
+            </div>
+
+
+
+
+            @if (Model.Id==0)
+                    {
+                        <input type="submit" value="Create" class="btn-primary" />
+                    }
+                    else
+                    {
+                        <input type="submit" value="Update" class="btn-primary" />
+                    }
+              
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

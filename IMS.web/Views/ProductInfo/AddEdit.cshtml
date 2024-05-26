@@ -1,0 +1,140 @@
+﻿
+@model IMS.Modes.Entity.ProductInfo
+
+@if(Model.Id == 0)
+{
+    <div>
+        <p>Create</p>
+    </div>
+}
+else{
+    <div>
+        <p>Update</p>
+    </div>}
+
+
+<form asp-action="AddEdit" enctype="multipart/form-data">
+<div class="row">
+    <div class="col-10">
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="CategoryInfoId" class="form-label"></label>
+                        <select asp-for="CategoryInfoId" class="form-control" asp-items="@(new SelectList(ViewBag.CategoryInfos,"Id","CategoryName"))">
+                            <option selected disabled>-CHOOSE-</option>
+                        </select>
+                        <span asp-validation-for="CategoryInfoId" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="ProductName" class="form-label"></label>
+                        <input asp-for="ProductName" class="form-control" placeholder="@Model.ProductName" />
+                        <span asp-validation-for="ProductName" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="ProductDescription" class="form-label"></label>
+                        <input asp-for="ProductDescription" class="form-control" placeholder="@Model.ProductDescription" />
+                        <span asp-validation-for="ProductDescription" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="UnitInfoId" class="form-label"></label>
+                        <select asp-for="UnitInfoId" class="form-control" asp-items="@(new SelectList(ViewBag.UnitInfos,"Id","UnitName"))">
+                            <option selected disabled>-CHOOSE-</option>
+                        </select>
+                        <span asp-validation-for="CategoryInfoId" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="row">
+                <div class="col-6">
+                    <div>
+                        <label class="check-box">
+                            <input type="checkbox" asp-for="IsActive" />
+                            <span asp-validation-for="IsActive" class="text-ranger"></span>
+                            <p class="terms" formation="">Is Active</p>
+                        </label>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+            <div class="col-2">
+                <div class="image-uploaded">
+                    @if (!string.IsNullOrEmpty(Model?.ImageUrl))
+                    {
+                        <img src="/@Model.ImageUrl" id="userPhotos" class="img-thumbnail align-center" style="height:100px;width:100px;" onerror="this.src='../images/errorPhoto.png;'" />
+                    }
+                    else
+                    {
+                        <img id="userPhoto" src="~/images/errorPhoto.png" class="img-thumbnail align-center" style="height:100px;width:100px;" />
+                    }
+
+                </div>
+
+                <div class="input-group input-file mt-1">
+                    <label class="input-group-btn">
+                        <span class="btn btn-medium btn-primary">
+                            Upload Photo
+                            <input asp-for="ImageFile" class="form-control" onchange="readURL(this)" style="display:none" />
+                            <span asp-validation-for="ImageFile" class="text-ranger"></span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+    </div>
+
+            <div class="row">
+                <div class="col-6">
+                        @if (Model.Id==0)
+                                    {
+                                        <input type="submit" value="Create" class="btn-primary" />
+                                    }
+                                    else
+                                    {
+                                        <input type="submit" value="Update" class="btn-primary" />
+                                    }
+                </div>  
+            </div>
+   
+
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function readURL(input){
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                if ('@Model?.ImageUrl'== '') {
+                    reader.onload = function (e) {
+                        $("#userPhoto").attr('src', e.target.result);
+                    }
+                }
+                else
+                {
+                        reader.onload = function (e) {
+                            $("#userPhotos").attr('src', e.target.result);
+                        }
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+
+
+        }
+    </script>
+}

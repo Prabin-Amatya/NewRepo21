@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,9 @@ namespace IMS.Modes.Entity
         public int CategoryInfoId {  get; set; }
         public int ProductInfoId { get; set; }
         public int StoreInfoId {  get; set; }
+
+        [NotMapped]
+        public int UnitInfoId { get; set; }
 
         public float CostPrice {  get; set; }
         public float RemainingQuantity { get; set; }
@@ -31,12 +35,13 @@ namespace IMS.Modes.Entity
 
         public DateTime? ModifiedDate { get; set; }
 
-
         public string? ModifiedBy { get; set; }
         public virtual ICollection<ProductInvoiceDetailInfo> ProductInvoiceDetailInfos { get; set; }
 
         public virtual ICollection <TransactionInfo> TransactionInfos { get; set; }
         public virtual ICollection<StockInfo> StockInfos { get; set; }
+
+
         public virtual CategoryInfo CategoryInfo { get; set; }
         public virtual RackInfo RackInfo { get; set; }
         public virtual ProductInfo ProductInfo { get; set; }

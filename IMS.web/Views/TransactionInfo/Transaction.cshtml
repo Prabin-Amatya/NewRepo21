@@ -1,0 +1,76 @@
+﻿@model IMS.Modes.ViewModels.TransactionViewModel
+
+<div class="row">
+    <p style="font-size:20px; text-align:center">Transaction</p>
+</div>
+
+<style>
+    .leftside{
+        border: 1px solid black;
+    }
+</style>
+
+<div class="row">
+
+    <div class="col-3" >
+        <p style="font-size:18px; text-align:center">Select Product</p>
+        <div class="row">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label class="form-label"></label>
+                        <select asp-for="ProductInvoiceInfo.CategoryInfoId" id="CategoryInfoId" class="form-control" asp-items="@(new SelectList(ViewBag.CategoryInfos,"Id","CategoryName"))">
+                            <option selected disabled>-CHOOSE-</option>
+                        </select>
+                        <span asp-validation-for="CategoryInfoId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label asp-for="ProductInfoId" class="form-label">Product</label>
+                        <select asp-for="CategoryInfoId" id="CategoryInfoId" class="form-control" asp-items="@(new SelectList(ViewBag.CategoryInfos,"Id","CategoryName"))">
+                            <option selected disabled>-CHOOSE-</option>
+                        </select>
+                        <span asp-validation-for="CategoryInfoId" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label class="form-label">Batch No</label>
+                            <select  id="BatchNo" class="form-control" asp-items="@(new SelectList(ViewBag.CategoryInfos,"Id","CategoryName"))">
+                                <option selected disabled>-CHOOSE-</option>
+                            </select>
+                            <span  class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label class="form-label">Batch No</label>
+                            <select id="BatchNo" class="form-control" asp-items="@(new SelectList(ViewBag.CategoryInfos,"Id","CategoryName"))">
+                                <option selected disabled>-CHOOSE-</option>
+                            </select>
+                            <span class="text-danger"></span>
+                        </div>
+
+                    <div class="form-group">
+
+                        <label asp-for="Price" class="form-label"></label>
+                        <input asp-for="Price" class="form-control" placeholder="@Model.RackName" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                    </div>  
+                </div>
+
+
+        </div>
+    </div>
+    <div class="col-6">
+        <p style="font-size:18px; text-align:center">Product List</p>
+        <div class="row">  </div>
+    </div>
+    <div class="col-3">
+        <p style="font-size:18px; text-align:center">Summary</p>
+    </div>
+</div>

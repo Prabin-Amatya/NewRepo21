@@ -1,0 +1,196 @@
+﻿
+@model IMS.Modes.Entity.ProductRateInfo
+@{
+    ViewData["Title"] = "Product Purchase Management";
+
+}
+
+@if(Model.Id == 0)
+{
+    <div>
+        <p>Create</p>
+    </div>
+}
+else{
+    <div>
+        <p>Update</p>
+    </div>}
+
+            
+                    <form asp-action="AddEdit"  enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label asp-for="CategoryInfoId" class="form-label"></label>
+                                    <select asp-for = "CategoryInfoId" id="CategoryInfoId"  class="form-control" asp-items="@(new SelectList(ViewBag.CategoryInfos,"Id","CategoryName"))">
+                                        <option selected disabled>-CHOOSE-</option>
+                                    </select>
+                                    <span asp-validation-for="CategoryInfoId" class="text-danger"></span>
+                                </div>
+                            </div>
+
+
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label asp-for="ProductInfoId" class="form-label"></label>
+                                <select asp-for="ProductInfoId" id="ProductInfoId" class="form-control" asp-items="@(new SelectList(ViewBag.ProductInfos,"Id","ProductName"))">
+                                    <option selected disabled>-CHOOSE-</option>
+                                </select>
+                                <span asp-validation-for="ProductInfoId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label asp-for="Quantity" class="form-label"></label>
+                            <input asp-for="Quantity" class="form-control" placeholder="@Model.Quantity" />
+                            <span asp-validation-for="Quantity" class="text-danger"></span>
+                        </div>
+                    </div>
+                    </div>              
+
+
+                        <div class="row">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label asp-for="UnitInfoId" class="form-label"></label>
+                                    <select asp-for="UnitInfoId" id="UnitInfoId" class="form-control" asp-items="@(new SelectList(ViewBag.UnitInfos,"Id","UnitName"))" disabled>
+                                    <option selected disabled>-CHOOSE-</option>
+                                </select>
+                                <span asp-validation-for="UnitInfoId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label asp-for="CostPrice" class="form-label"></label>
+                                <input asp-for="CostPrice" class="form-control" placeholder="@Model.CostPrice" />
+                                <span asp-validation-for="CostPrice" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label asp-for="SellingPrice" class="form-label"></label>
+                                <input asp-for="SellingPrice" class="form-control" placeholder="@Model.SellingPrice" />
+                                <span asp-validation-for="SellingPrice" class="text-danger"></span>
+                            </div>
+                        </div>
+                        </div>
+
+                        <div class="row">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label asp-for="PurchasedDate" class="form-label"></label>
+                                <input asp-for="PurchasedDate" class="form-control" placeholder="@Model.PurchasedDate" type="date" />
+                                <span asp-validation-for="PurchasedDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label asp-for="ExpiryDate" class="form-label"></label>
+                                <input asp-for="ExpiryDate" class="form-control" placeholder="@Model.ExpiryDate" type="date" />
+                                <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label asp-for="BatchNo" class="form-label"></label>
+                                <input asp-for="BatchNo" class="form-control" placeholder="@Model.BatchNo" />
+                                <span asp-validation-for="BatchNo" class="text-danger"></span>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label asp-for="SupplierInfoId" class="form-label"></label>
+                                    <select asp-for="SupplierInfoId" class="form-control" asp-items="@(new SelectList(ViewBag.SupplierInfos,"Id","SupplierName"))">
+                                    <option selected disabled>-CHOOSE-</option>
+                                </select>
+                                <span asp-validation-for="SupplierInfoId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        
+
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label asp-for="RackInfoId" class="form-label"></label>
+                                    <select asp-for="RackInfoId" class="form-control" asp-items="@(new SelectList(ViewBag.RackInfos,"Id","RackName"))">
+                                        <option selected disabled>-CHOOSE-</option>
+                                    </select>
+                                    <span asp-validation-for="RackInfoId" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                        <div>
+                            <label class="check-box">
+                                <input type="checkbox" asp-for="IsActive" />
+                                <span asp-validation-for="IsActive" class="text-ranger"></span>
+                                <p class="terms" formation="">Is Active</p>
+                            </label>
+                        </div>
+                        </div>
+
+                        @if (Model.Id==0)
+                                    {
+                                        <input type="submit" value="Create" class="btn-primary" />
+                                    }
+                                    else
+                                    {
+                                        <input type="submit" value="Update" class="btn-primary" />
+                                    }
+              
+                      </form>
+                      </div>
+
+    
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $('#CategoryInfoId').change(function () {
+            ChangeProduct();
+        });
+
+        function ChangeProduct() {
+            var categoryId = $('#CategoryInfoId').val();
+            $.ajax({
+                url: '/api/ProductRate/getProduct',
+                data: { CategoryId: categoryId },
+                method: 'POST'
+            }).done(function (data) {
+                console.log(data);
+                optionval = '<option disabled selected> --Choose--</option>';
+                $.each(data['productList'], function (index, value) {
+                    optionval += '<option value="' + value['id'] + '">' + value['productName'] + '</option>';
+                });
+                $('#ProductInfoId').empty();
+                $('#ProductInfoId').append(optionval);
+            }).fail(function () {
+
+            });
+        }
+        
+
+            
+            $('#ProductInfoId').change(function () {
+                ChangeUnit();
+            });
+            function ChangeUnit() {
+                var productId = $('#ProductInfoId').val();
+                $.ajax({
+                    url: '/api/ProductRate/getUnit',
+                    data: { ProductId: productId },
+                    method: 'POST'
+                }).done(function (data) {
+                    console.log(data);
+                    $('#UnitInfoId').val(data.product.unitInfoId);
+                }).fail(function () {
+
+                });
+            }
+        
+    </script>
+    
+}

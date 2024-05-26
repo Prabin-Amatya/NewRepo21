@@ -1,0 +1,20 @@
+﻿@model IMS.Modes.Entity.UnitInfo;
+
+<h3>Are you sure you want to delete?</h3>
+
+<div>
+    <dl class="row-cols-xxl-auto">
+        <dd class="col-sm-2">
+            @Html.DisplayNameFor(UnitInfo=>UnitInfo.UnitName): @Model.UnitName
+        </dd>
+        
+        
+        <dd class="col-sm-6">
+            @Html.DisplayNameFor(UnitInfo => UnitInfo.IsActive): @Model.IsActive
+        </dd>
+    </dl>
+</div>
+
+<form asp-action="Remove">
+    <input type="submit" value="Remove" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete?')"/>   
+</form>

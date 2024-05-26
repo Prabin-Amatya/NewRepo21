@@ -1,0 +1,28 @@
+﻿@model IMS.Modes.Entity.CustomerInfo;
+
+<h3>Are you sure you want to delete?</h3>
+
+<div>
+    <dl class="row-cols-xxl-auto">
+        <dd class="col-sm-2">
+            @Html.DisplayNameFor(CustomerInfo => CustomerInfo.CustomerName): @Model.CustomerName
+        </dd>
+        <dd class="col-sm-6">
+            @Html.DisplayNameFor(CustomerInfo => CustomerInfo.PhoneNumber): @Model.PhoneNumber
+        </dd>
+        <dd class="col-sm-6">
+            @Html.DisplayNameFor(CustomerInfo => CustomerInfo.Email): @Model.Email
+        </dd>
+        <dd class="col-sm-6">
+            @Html.DisplayNameFor(CustomerInfo => CustomerInfo.Address): @Model.Address
+        </dd>
+        
+        <dd class="col-sm-6">
+            @Html.DisplayNameFor(CustomerInfo => CustomerInfo.PanNo): @Model.PhoneNumber
+        </dd>
+    </dl>
+</div>
+
+<form asp-action="Remove">
+    <input type="submit" value="Remove" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete?')"/>   
+</form>

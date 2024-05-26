@@ -4,19 +4,20 @@ using IMS.web.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Security;
 
 namespace IMS.web.Controllers
 {
-    public class CategoryInfoController : Controller
+    public class SupplierInfoController : Controller
     {
         public readonly ICrudService<StoreInfo> _storeInfo;
-        public readonly ICrudService<CategoryInfo> _categoryInfo;
+        public readonly ICrudService<SupplierInfo> _supplierInfo;
         public readonly UserManager<ApplicationUser> _userManager;
 
-        public CategoryInfoController(ICrudService<StoreInfo> storeInfo, ICrudService<CategoryInfo> categoryInfo, UserManager<ApplicationUser> userManager)
+        public SupplierInfoController(ICrudService<StoreInfo> storeInfo, ICrudService<SupplierInfo> supplierInfo, UserManager<ApplicationUser> userManager)
         {
             _storeInfo = storeInfo;
-            _categoryInfo = categoryInfo;
+            _supplierInfo = supplierInfo;
             _userManager = userManager;
         }
 
@@ -25,22 +26,22 @@ namespace IMS.web.Controllers
             var userId = _userManager.GetUserId(HttpContext.User);
             var user = await _userManager.FindByIdAsync(userId);
             var storeInfo = await _storeInfo.GetAsync(user.StoreId);
-            var categories = await _categoryInfo.GetAllAsync(p => p.StoreInfoId == storeInfo.Id);
+            var categories = await _supplierInfo.GetAllAsync(p => p.StoreInfoId == storeInfo.Id);
             return View(categories);
         }
         public async Task<IActionResult> AddEdit(int id)
         {
-            CategoryInfo categoryInfo = new CategoryInfo();
-            categoryInfo.IsActive = true;
+            SupplierInfo supplierInfo = new SupplierInfo();
+            supplierInfo.IsActive = true;
             if (id > 0)
             {
-                categoryInfo = await _categoryInfo.GetAsync(id);
+                supplierInfo = await _supplierInfo.GetAsync(id);
             }
-            return View(categoryInfo);
+            return View(supplierInfo);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddEdit(CategoryInfo categoryInfo)
+        public async Task<IActionResult> AddEdit(SupplierInfo supplierInfo)
         {
             if (ModelState.IsValid)
             {
@@ -48,27 +49,30 @@ namespace IMS.web.Controllers
                 {
                     var userId = _userManager.GetUserId(HttpContext.User);
                     var user = await _userManager.FindByIdAsync(userId);
-                    if (categoryInfo.Id == 0)
+                    if (supplierInfo.Id == 0)
                     {
 
-                        categoryInfo.IsActive = true;
-                        categoryInfo.CreatedDate = DateTime.Now;
-                        categoryInfo.CreatedBy = userId;
-                        categoryInfo.StoreInfoId = user.StoreId;
-                        await _categoryInfo.InsertAsync(categoryInfo);
+                        supplierInfo.IsActive = true;
+                        supplierInfo.CreatedDate = DateTime.Now;
+                        supplierInfo.CreatedBy = userId;
+                        supplierInfo.StoreInfoId = user.StoreId;
+                        await _supplierInfo.InsertAsync(supplierInfo);
                         TempData["success"] = "Data Added Successfully";
                     }
                     else
                     {
-                        var OrgStoreInfo = await _categoryInfo.GetAsync(categoryInfo.Id);
-                        OrgStoreInfo.CategoryName = categoryInfo.CategoryName;
-                        OrgStoreInfo.CategoryDescription = categoryInfo.CategoryDescription;
-                        OrgStoreInfo.IsActive = categoryInfo.IsActive;
+                        var OrgStoreInfo = await _supplierInfo.GetAsync(supplierInfo.Id);
+                        OrgStoreInfo.SupplierName = supplierInfo.SupplierName;
+                        OrgStoreInfo.ContactPerson = supplierInfo.ContactPerson;
+                        OrgStoreInfo.PhoneNumber = supplierInfo.PhoneNumber;
+                        OrgStoreInfo.Email = supplierInfo.Email;
+                        OrgStoreInfo.Address = supplierInfo.Address;
+                        OrgStoreInfo.IsActive = supplierInfo.IsActive;
                         OrgStoreInfo.ModifiedDate = DateTime.Now;
                         OrgStoreInfo.ModifiedBy = "";
                         OrgStoreInfo.StoreInfoId = user.StoreId;
 
-                        await _categoryInfo.UpdateAsync(OrgStoreInfo);
+                        await _supplierInfo.UpdateAsync(OrgStoreInfo);
                         TempData["success"] = "Data Updated Successfully";
 
                     }
@@ -89,13 +93,13 @@ namespace IMS.web.Controllers
 
         public async Task<IActionResult> Remove(int id)
         {
-            return View(await _categoryInfo.GetAsync(id));
+            return View(await _supplierInfo.GetAsync(id));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Remove(CategoryInfo categoryInfo)
+        public async Task<IActionResult> Remove(SupplierInfo supplierInfo)
         {
-            _categoryInfo.Delete(categoryInfo);
+            _supplierInfo.Delete(supplierInfo);
             TempData["error"] = "Data Deleted Successfully";
             return RedirectToAction(nameof(Index));
 

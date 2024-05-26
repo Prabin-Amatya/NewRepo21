@@ -1,23 +1,23 @@
-﻿@model IMS.Modes.Entity.SupplierInfo;
+﻿@model IMS.Modes.Entity.ProductInfo;
 
 <h3>Are you sure you want to delete?</h3>
 
 <div>
     <dl class="row-cols-xxl-auto">
         <dd class="col-sm-2">
-            @Html.DisplayNameFor(SupplierInfo=>SupplierInfo.SupplierName): @Model.SupplierName
+            @Html.DisplayNameFor(SupplierInfo=>SupplierInfo.ProductName): @Model.ProductName
         </dd>
         <dd class="col-sm-6">
-            @Html.DisplayNameFor(SupplierInfo => SupplierInfo.ContactPerson): @Model.ContactPerson
+            @Html.DisplayNameFor(SupplierInfo => SupplierInfo.ProductDescription): @Model.ProductDescription
         </dd>
         <dd class="col-sm-2">
-            @Html.DisplayNameFor(SupplierInfo => SupplierInfo.PhoneNumber): @Model.PhoneNumber
+            @Html.DisplayNameFor(SupplierInfo => SupplierInfo.CategoryInfoId): @Model.CategoryInfoId
         </dd>
         <dd class="col-sm-6">
-            @Html.DisplayNameFor(SupplierInfo => SupplierInfo.Address): @Model.Address
+            @Html.DisplayNameFor(SupplierInfo => SupplierInfo.UnitInfoId): @Model.UnitInfo
         </dd>
         <dd class="col-sm-6">
-            @Html.DisplayNameFor(SupplierInfo => SupplierInfo.Email): @Model.Email
+            @Html.DisplayNameFor(SupplierInfo => SupplierInfo.IsActive): @Model.IsActive
         </dd>
         
         <dd class="col-sm-6">

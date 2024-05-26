@@ -1,5 +1,5 @@
 ﻿
-@model IMS.Modes.Entity.CategoryInfo
+@model IMS.Modes.Entity.UnitInfo
 
 @if(Model.Id == 0)
 {
@@ -17,25 +17,17 @@ else{
         <form asp-action="AddEdit">
             <div class="form-group">
 
-                <label asp-for="CategoryName" class="form-label"></label>
-                <input asp-for="CategoryName" class="form-control" placeholder="@Model.CategoryName" />
-                <span asp-validation-for="CategoryName" class="text-danger"></span>
+                <label asp-for="UnitName" class="form-label"></label>
+                <input asp-for="UnitName" class="form-control" placeholder="@Model.UnitName" />
+                <span asp-validation-for="UnitName" class="text-danger"></span>
             </div>
-
-
-            <div class="form-group">
-                <label asp-for="CategoryDescription" class="form-label"></label>
-                <input asp-for="CategoryDescription" class="form-control" placeholder="@Model.CategoryDescription" />
-                <span asp-validation-for="CategoryDescription" class="text-danger"></span>
-            </div>
-
             @if (Model.Id != 0)
             {
                 <label class="check-box">
                     <input type="checkbox" asp-for="IsActive" />
-                <span class="btn-check"></span>
-                <p class="terms" formation="">Is Active</p>
-            </label>
+                    <span class="btn-check"></span>
+                    <p class="terms" formation="">Is Active</p>
+                </label>
             }
 
             @if (Model.Id==0)
