@@ -1,6 +1,6 @@
 ﻿@model IMS.Modes.ViewModels.TransactionViewModel
 
-<!--
+
 <div class="row">
     <p style="font-size:20px; text-align:center">Transaction</p>
 </div>
@@ -11,68 +11,564 @@
     }
 </style>
 
-<div class="row">
-
-    <div class="col-3" >
+<div class="row" style="border:2px solid azure; padding:5px">
+        <input id="availableQuantity" hidden/>
         <p style="font-size:18px; text-align:center">Select Product</p>
+        <form>
         <div class="row">
-                <div class="col-4">
+                <div class="col-2">
                     <div class="form-group">
-                        <label class="form-label"></label>
-                        <select asp-for="ProductInvoiceInfo.CategoryInfoId" id="CategoryInfoId" class="form-control" asp-items="@(new SelectList(ViewBag.CategoryInfos,"Id","CategoryName"))">
-                            <option selected disabled>-CHOOSE-</option>
+                        <label asp-for="CategoryInfoId "class="form-label"></label>
+                        <select asp-for="CategoryInfoId" id="CategoryInfoId" class="form-control" asp-items="@(new SelectList(ViewBag.CategoryInfos,"Id","CategoryName"))">
+                            <option value="null" selected disabled>-CHOOSE-</option>
                         </select>
-                        <span asp-validation-for="CategoryInfoId" class="text-danger"></span>
+                        <span id="ValidCategory" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-2">
                     <div class="form-group">
                         <label asp-for="ProductInfoId" class="form-label">Product</label>
-                        <select asp-for="CategoryInfoId" id="CategoryInfoId" class="form-control" asp-items="@(new SelectList(ViewBag.CategoryInfos,"Id","CategoryName"))">
-                            <option selected disabled>-CHOOSE-</option>
+                        <select asp-for="ProductInfoId" id="ProductInfoId" class="form-control" asp-items="@(new SelectList(ViewBag.ProductInfos,"Id","ProductName"))">
+                            <option value="null" selected disabled>-CHOOSE-</option>
                         </select>
-                        <span asp-validation-for="CategoryInfoId" class="text-danger"></span>
+                        <span id="ValidProduct" class="text-danger"></span>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-4">
+                   
+
+                    <div class="col-2">
+                            <div class="form-group">
+                                <label class="form-label">Batch No</label>
+                                <select id="BatchNo" class="form-control">
+                                    <option value="null" selected disabled>-CHOOSE-</option>
+                                </select>
+                                <span class="text-danger" id="ValidBatch"></span>
+                            </div>
+                    </div>
+                    
+                    <div class="col-1">
+                            <div class="form-group">
+
+                                <label class="form-label">Price</label>
+                    <input id="Price" class="form-control" />
+                                <span  class="text-danger" id="ValidPrice"></span>
+                            </div>
+                    </div>
+
+
+                    <div class="col-1">
+                            <div class="form-group">
+
+                                <label class="form-label">Quantity</label>
+                    <input id="Quantity" onchange="changeamt()" class="form-control" />
+                                <span class="text-danger" id="ValidQuantity"></span>
+                            </div>
+                    </div>
+
+                    <div class="col-1">
                         <div class="form-group">
-                            <label class="form-label">Batch No</label>
-                            <select  id="BatchNo" class="form-control" asp-items="@(new SelectList(ViewBag.CategoryInfos,"Id","CategoryName"))">
-                                <option selected disabled>-CHOOSE-</option>
-                            </select>
-                            <span  class="text-danger"></span>
+
+                            <label class="form-label">Amount</label>
+                            <input id="Amount" class="form-control"/>
+                            <span class="text-danger" id="ValidAmount"></span>
                         </div>
                     </div>
 
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label class="form-label">Batch No</label>
-                            <select id="BatchNo" class="form-control" asp-items="@(new SelectList(ViewBag.CategoryInfos,"Id","CategoryName"))">
-                                <option selected disabled>-CHOOSE-</option>
-                            </select>
-                            <span class="text-danger"></span>
-                        </div>
 
+                <div class="col-2">
                     <div class="form-group">
+                            <label  class="form-label">Unit</label>
+                                <select  id="UnitInfoId" class="form-control" asp-items="@(new SelectList(ViewBag.UnitInfos,"Id","UnitName"))">
+                                    <option value="null" selected disabled>-CHOOSE-</option>
+                                </select>
+                            <span  class="text-danger" id="ValidUnit"></span>
+                     </div>
+                </div>
 
-                        <label asp-for="Price" class="form-label"></label>
-                        <input asp-for="Price" class="form-control" placeholder="Model.RackName" />
-                        <span asp-validation-for="Price" class="text-danger"></span>
-                    </div>
-                    </div>  
+          
+                <div class="col-1">
+                    <a class="btn btn-primary mt-4" id="addbtn" style="margin-top:50px" id ="addbtn">Add</a>
                 </div>
 
 
         </div>
+        </form>
+</div>
+<br />
+<div class="row" style="border:1px solid red">
+
+    <div class="col-8" style="border:1px solid red">
+
+        <div class="row">
+            <p style="font-size:18px;text-align:center">Purchase List </p>
+            <div class="row col-12">
+
+                <table class="table table-bordered" id="listtable" width="100%"></table>
+
+            </div>
+
+
+
+        </div>
     </div>
-    <div class="col-6">
-        <p style="font-size:18px; text-align:center">Product List</p>
-        <div class="row">  </div>
-    </div>
-    <div class="col-3">
-        <p style="font-size:18px; text-align:center">Summary</p>
+    <div class="col-4" style="border:1px solid red">
+        <p style="font-size:18px;text-align:center">Summary </p>
+
+        <div class="row">
+
+            <div class="col-6">
+                <label class="col-form-label">Total Item Count :</label>
+            </div>
+            <div class="col-6">
+                <input id="totalCount" class="form-control">
+            </div>
+
+        </div>
+        <div class="row">
+
+            <div class="col-6">
+                <label class="col-form-label">Total Quantity :</label>
+            </div>
+            <div class="col-6">
+                <input id="totalQuantity" class="form-control">
+            </div>
+
+        </div>
+        <div class="row">
+
+            <div class="col-6">
+                <label class="col-form-label">Amount :</label>
+            </div>
+            <div class="col-6">
+                <input id="amt" class="form-control" >
+            </div>
+
+        </div>
+        <div class="row">
+
+            <div class="col-6">
+                <label class="col-form-label">Discount :</label>
+            </div>
+            <div class="col-6">
+                <input id="discount" class="form-control">
+            </div>
+
+        </div>
+        <div class="row">
+
+            <div class="col-6">
+                <label class="col-form-label">Total Amount :</label>
+            </div>
+            <div class="col-6">
+                <input id="totalAmount" class="form-control">
+            </div>
+
+        </div>
+        <hr />
+        <div class="row">
+            <div class="form-group">
+                <label class="form-label">Select Customer   <a id="addcustomer" class="btn btn-outline-primary btn-sm">Add Customer</a>   </label>
+                <select id="customerInfo" class="form-control" asp-items="@(new SelectList(ViewBag.CustomerInfos,"Id","CustomerName"))">
+                    <option value="null" selected disabled>-Choose-</option>
+                </select>
+
+                <span class="text-danger"></span>
+            </div>
+
+
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <a class="btn btn-secondary px-4 " style="margin-top:30px">Back</a>
+            </div>
+            <div class="col-6">
+                <a class="btn btn-primary px-4 float-end" style="margin-top:30px">Submit</a>
+            </div>
+
+        </div>
+        <br />
     </div>
 </div>
--->
+
+<div id="customermodal" class="modal" tabindex="1" >
+   <div class="modal-dialog modal-lg">
+       <div class="modal-content">
+           <div class="modal-header">
+               <h5 class="modal-title">Add Customer</h5>
+               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+           </div>
+           <div class="modal-body">
+               <form id="customerform">
+                   <div class="row">
+                       <div class="col-6">
+                           <label class="form-label" asp-for="CustomerInfo.CustomerName"></label>
+                            <input id="CustomerName" class="form-control" asp-for="CustomerInfo.CustomerName"/>
+                            <span class="text-danger" asp-validation-for="CustomerInfo.CustomerName"></span>
+                       </div>
+                        <div class="col-6">
+                            <label class="form-label" asp-for="CustomerInfo.PanNo"></label>
+                            <input id="PanNo" class="form-control" asp-for="CustomerInfo.PanNo" />
+                            <span class="text-danger" asp-validation-for="CustomerInfo.PanNo"></span>
+                        </div>
+                   </div>
+
+
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label" asp-for="CustomerInfo.PhoneNumber"></label>
+                            <input id="PhoneNumber" class="form-control" asp-for="CustomerInfo.PhoneNumber" />
+                            <span class="text-danger" asp-validation-for="CustomerInfo.PhoneNumber"></span>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label" asp-for="CustomerInfo.Email"></label>
+                            <input id="Email" class="form-control" asp-for="CustomerInfo.Email" />
+                            <span class="text-danger" asp-validation-for="CustomerInfo.Email"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label" asp-for="CustomerInfo.Address"></label>
+                            <input id="Address" class="form-control" asp-for="CustomerInfo.Address" />
+                            <span class="text-danger" asp-validation-for="CustomerInfo.Address"></span>
+                        </div>
+                    </div>
+               </form>
+           </div>
+           <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a id="savebtn" class="btn btn-primary">Save</a>
+           </div>
+       </div>
+
+    </div>
+</div>
+
+
+
+@section Scripts{
+<script>
+    
+        
+        $('#addcustomer').click(function () {
+            $('#customermodal').show();
+        });
+
+        $('#addbtn').click(function () {
+            addtolist();
+        });
+
+        
+    function addtolist() {
+        if (validForm()) {
+            if (!document.getElementById('dynamictable')) {
+
+                var tbl = document.createElement("table");
+                tbl.setAttribute('id', 'dynamictable');
+                var header = document.createElement('tr');
+
+                var headingCell1 = document.createElement('th');
+                var headingText1 = document.createTextNode('Category');
+                headingCell1.setAttribute('name', 'category');
+                headingCell1.appendChild(headingText1);
+                header.appendChild(headingCell1);
+
+
+                var headingCell2 = document.createElement('th');
+                var headingText2 = document.createTextNode('Product');
+                headingCell2.setAttribute('name', 'product');
+                headingCell2.appendChild(headingText2);
+                header.appendChild(headingCell2);
+
+                var headingCell3 = document.createElement('th');
+                var headingText3 = document.createTextNode('Batch');
+                headingCell3.setAttribute('name', 'batch');
+                headingCell3.appendChild(headingText3);
+                header.appendChild(headingCell3);
+
+                var headingCell4 = document.createElement('th');
+                var headingText4 = document.createTextNode('Unit');
+                headingCell4.setAttribute('name', 'unit');
+                headingCell4.appendChild(headingText4);
+                header.appendChild(headingCell4);
+
+                var headingCell5 = document.createElement('th');
+                var headingText5 = document.createTextNode('Price');
+                headingCell5.appendChild(headingText5);
+                header.appendChild(headingCell5);
+
+                var headingCell6 = document.createElement('th');
+                var headingText6 = document.createTextNode('Quantity');
+                headingCell6.appendChild(headingText6);
+                header.appendChild(headingCell6);
+
+                var headingCell7 = document.createElement('th');
+                var headingText7 = document.createTextNode('Amount');
+                headingCell7.appendChild(headingText7);
+                header.appendChild(headingCell7);
+
+                var headingCell8 = document.createElement('th');
+                var headingText8 = document.createTextNode('');
+                headingCell8.appendChild(headingText8);
+                header.appendChild(headingCell8);
+
+                tbl.appendChild(header);
+
+                var body = document.createElement('tbody');
+                tbl.appendChild(body);
+                document.getElementById("listtable").append(tbl);
+
+            }
+
+
+
+            let myTable = document.getElementById('dynamictable').getElementsByTagName('tbody')[0];
+
+            let row = myTable.insertRow();
+            let cell1 = row.insertCell(0);
+            let cell2 = row.insertCell(1);
+            let cell3 = row.insertCell(2);
+            let cell4 = row.insertCell(3);
+            let cell5 = row.insertCell(4);
+            let cell6 = row.insertCell(5);
+            let cell7 = row.insertCell(6);
+            let cell8 = row.insertCell(7);
+
+            cell1.setAttribute('data-name-category', $("#CategoryInfoId option:selected").val());
+            cell1.innerHTML = $('#CategoryInfoId option:selected').text();
+
+            cell2.setAttribute('data-name-product', $("#ProductInfoId option:selected").val());
+            cell2.innerHTML = $('#ProductInfoId option:selected').text();
+
+            cell3.setAttribute('data-name-batch', $('#BatchNo option:selected').val());
+            cell3.innerHTML = $('#BatchNo option:selected').text();
+
+            cell4.setAttribute('data-name-unit', $('#UnitInfoId option:selected').val());
+            cell4.innerHTML = $('#UnitInfoId option:selected').text();
+
+            cell5.innerHTML = $("#Price").val();
+            cell6.innerHTML = $('#Quantity').val();
+            cell7.innerHTML = $('#Amount').val();
+
+            var btn = document.createElement('input');
+            btn.type = "button";
+            btn.className = "btn";
+            btn.className = "btn-primary";
+            btn.name = "Delete";
+            btn.value = "Delete";
+            btn.setAttribute('onclick', 'DeleteRows(this)');
+            cell8.appendChild(btn);
+
+            getsummary();
+        }
+        reset();
+ }
+        
+    function DeleteRows(btn){
+        var row = btn.parentNode.parentNode;
+        console.log(row.rowIndex);
+        row.parentNode.removeChild(row);
+    };
+
+
+    function getsummary(){
+            var precount = ($('#totalCount').val() == '') ? 0 : $('#totalCount').val();
+            var count = parseFloat(precount)+1;
+            console.log(count);
+            $('#totalCount').val(count);
+
+            var prequan = ($('#totalQuantity').val() == '') ? 0 : $('#totalQuantity').val();
+            var curquan = $("#Quantity").val();
+            var quan = parseFloat(prequan) + parseFloat(curquan);
+            console.log(quan);
+            $('#totalQuantity').val(quan);
+
+            var preamt = ($('#amt').val() == '') ? 0 : $('#amt').val();
+            var curamt = $('#Amount').val();
+            var amt = parseFloat(preamt) + parseFloat(curamt);
+            console.log(amt);
+            $('#amt').val(amt);
+
+            totalamount();
+    }
+
+    function totalamount(){
+
+        var amt = $('#amt').val();
+        $('#totalAmount').val(amt);
+    }
+
+    function reset() {
+        $('#availableQuantity').val('');
+        $('#avlqty').text('');
+        $('#CategoryInfoId').val('null');
+        $('#ProductInfoId').val('null');
+        $('#BatchNo').val('null');
+        $('#Price').val('');
+        $('#UnitId').val('null');
+        $('#Amount').val('');
+    };
+        
+        
+    function changeamt(){
+        var qty = $('#Quantity').val();
+        var avlqty = $('#availableQuantity').val();
+        var dif = avlqty - qty;
+        var rate = $('#Price').val();
+        if(dif < 0){
+            alert("Quantity not available");
+            $("#Quantity").val('');
+            return true;
+        }
+        else
+        {
+            var totamt = qty * rate;
+            $('#Amount').val(totamt);
+        }
+    };
+
+    function validForm(){
+
+            var currValues = [$("#CategoryInfoId").val(),
+                            $("#ProductInfoId").val(),
+                            $("#Price").val(),
+                            $("#BatchNo").val(),
+                            $("#UnitInfoId").val(),
+                            $("#Amount").val(),
+                            $("#Quantity").val(),
+                            ];
+            
+            var val = '#Valid';
+            var values = ['Category', 'Product', 'Price','Batch','Unit', 'Amount', 'Quantity'];
+            var id = '';
+            var isValid = true;
+            for(let i=0; i<values.length; i++)
+            {
+                id = val + values[i];
+                if (!currValues[i]) { 
+                    $(id).text(values[i] + ' field is empty');
+                    isValid = false;
+                    id = '';
+                }
+
+                else if (!(currValues[i] instanceof String)) {
+                    if (isNaN(currValues[i]) || currValues[i] < 0) {
+                        $(id).text(values[i] + ' field is invalid');
+                    }
+                }
+                else  $(id).text('');
+
+            }
+        return isValid;
+    }
+        
+    
+       
+    $('#savebtn').click(function () {
+        var obj = {
+            CustomerName : $('#CustomerName').val(),
+            PanNo : $("#PanNo").val(),
+            PhoneNumber : $("#PhoneNumber").val(),
+            Email : $("#Email").val(),
+            Address : $("#Address").val()
+        };
+
+        $.ajax({
+            url: '/api/CustomerInfo/addCustomer',
+            data : { model: obj },
+            method : 'POST'
+        }).done(function (data) {
+            $("#customermodal").hide();
+            optioncustomer = '<option value="' + data['id'] + '">' + data['customerName'] + '</option>';
+            $("#customerInfo").append(optioncustomer);
+        }).fail({
+
+        });
+    });
+    
+    
+    
+
+        $('#CategoryInfoId').change(function () {
+            ChangeProduct();
+        });
+
+        function ChangeProduct() {
+            var categoryId = $('#CategoryInfoId').val();
+            $.ajax({
+                url: '/api/Transaction/getProduct',
+                data: { CategoryId: categoryId },
+                method: 'POST'
+            }).done(function (data) {
+                console.log(data);
+                optionval = '<option disabled selected> --Choose--</option>';
+                $.each(data['productList'], function (index, value) {
+                    optionval += '<option value="' + value['id'] + '">' + value['productName'] + '</option>';
+                });
+                $('#ProductInfoId').empty();
+                $('#ProductInfoId').append(optionval);
+            }).fail(function () {
+
+            });
+    };
+        
+        $('#ProductInfoId').change(function () {
+            ChangeBatch();
+        });
+
+    function ChangeBatch() {
+            var productId = $('#ProductInfoId').val();
+            $.ajax({
+                url: '/api/Transaction/getBatch',
+                data: { ProductId: productId },
+                method: 'POST'
+            }).done(function (data) {
+                console.log(data);
+                optionval = '<option disabled selected> --Choose--</option>';
+                $.each(data['batchList'], function (index, value) {
+                    optionval += '<option value="' + value['id'] + '">' + value['batchNo'] + '</option>';
+                });
+                $('#BatchNo').empty();
+                $('#BatchNo').append(optionval);
+            }).fail(function () {
+
+            });
+    };
+
+            $('#ProductInfoId').change(function () {
+                ChangeUnit();
+            });
+            function ChangeUnit() {
+                var productId = $('#ProductInfoId').val();
+                $.ajax({
+                    url: '/api/Transaction/getUnit',
+                    data: { ProductId: productId },
+                    method: 'POST'
+                }).done(function (data) {
+                    console.log(data);
+                    $('#UnitInfoId').val(data.product.unitInfoId);
+                }).fail(function () {
+
+
+                });
+            }
+            $('#BatchNo').change(function () {
+                ChangeRate();
+            });
+
+            function ChangeRate() {
+                var productRateId = $('#BatchNo').val();
+                $.ajax({
+                    url: '/api/Transaction/getProductRate',
+                    data: { ProductRateId: productRateId },
+                    method: 'POST'
+                }).done(function (data) {
+                    console.log(data);
+                    $('#Price').val(data.productDetail.sellingPrice);
+                    $('#availableQuantity').val(data.productDetail.quantity);
+                }).fail(function () {
+                });
+    }
+</script>
+}

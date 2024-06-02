@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace IMS.Modes.ViewModels
 {
-    public class TransactionViewModel
+    public class TransactionViewModel:TransactionInfo
     { 
         public ProductInvoiceInfo ProductInvoiceInfo { get; set; }
         public IEnumerable<ProductInvoiceInfo> ProductInvoiceInfos {  get; set; }

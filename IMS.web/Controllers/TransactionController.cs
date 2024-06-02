@@ -54,23 +54,26 @@ namespace IMS.web.Controllers
 
             ViewBag.CategoryInfos = await _categoryInfo.GetAllAsync(p => p.IsActive == true && p.StoreInfoId == store.Id);
             ViewBag.UnitInfos = await _unitInfo.GetAllAsync(p => p.IsActive == true);
-            ViewBag.ProductInfos = await _productInfo.GetAllAsync(p => p.IsActive == true);
+            ViewBag.ProductInfos = await _productInfo.GetAllAsync(p => p.IsActive == true && p.StoreInfoId == store.Id);
             var transactionInfo = await _productInvoiceInfo.GetAllAsync();
             return View(transactionInfo);
         }
         public async Task<IActionResult> Transaction(int id)
         {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = await _userManager.FindByIdAsync(userId);
+            var store = await _storeInfo.GetAsync(user.StoreId);
+
             TransactionViewModel transactionViewModel = new TransactionViewModel();
 
-            ViewBag.CategoryInfos = await _categoryInfo.GetAllAsync(p => p.IsActive == true);
+            ViewBag.CategoryInfos = await _categoryInfo.GetAllAsync(p => p.IsActive == true && p.StoreInfoId == store.Id);
             ViewBag.UnitInfos = await _unitInfo.GetAllAsync(p => p.IsActive == true);
-            ViewBag.ProductInfos = await _productInfo.GetAllAsync(p => p.IsActive == true);
+            ViewBag.ProductInfos = await _productInfo.GetAllAsync(p => p.IsActive == true && p.StoreInfoId == store.Id);
 
-            ViewBag.ProductInvoiceInfos = await _productInvoiceInfo.GetAllAsync(p => p.IsActive == true);
-            ViewBag.RackInfos = await _rackInfo.GetAllAsync(p => p.IsActive == true);
-            ViewBag.SupplierInfos = await _supplierInfo.GetAllAsync(p => p.IsActive == true);
+            ViewBag.ProductInvoiceInfos = await _productInvoiceInfo.GetAllAsync(p => p.IsActive == true && p.StoreInfoId == store.Id);
+            ViewBag.RackInfos = await _rackInfo.GetAllAsync(p => p.IsActive == true && p.StoreInfoId == store.Id);
+            ViewBag.SupplierInfos = await _supplierInfo.GetAllAsync(p => p.IsActive == true && p.StoreInfoId == store.Id);
             ViewBag.CustomerInfos = await _customerInfo.GetAllAsync();
-
             return View(transactionViewModel);
         }
 
@@ -266,21 +269,38 @@ namespace IMS.web.Controllers
         }
 
         [HttpPost]
-        [Route("/api/ProductRate/getProduct")]
-        public async Task<IActionResult> getProduct(int CategoryId)
+        [Route("/api/Transaction/getBatch")]
+        public async Task<IActionResult> getBatch(int ProductId)
         {
-            var productList = await _productInfo.GetAllAsync(p => p.CategoryInfoId == CategoryId);
-            return Json(new { productList });
+            var BatchList = await _productRateInfo.GetAllAsync(p => p.ProductInfoId == ProductId);
+            return Json(new { BatchList });
 
         }
         [HttpPost]
-        [Route("/api/ProductRate/getUnit")]
+        [Route("/api/Transaction/getUnit")]
         public async Task<IActionResult> getUnit(int ProductId)
         {
             var product = await _productInfo.GetAsync(ProductId);
             return Json(new { product });
         }
 
+        [HttpPost]
+        [Route("/api/Transaction/getProduct")]
+        public async Task<IActionResult> getProduct(int CategoryId)
+        {
+            var productList = await _productInfo.GetAllAsync(p => p.CategoryInfoId == CategoryId);
+            return Json(new { productList });
+        }
+
+        [HttpPost]
+        [Route("/api/Transaction/getProductRate")]
+        public async Task<IActionResult> getProductRate(int ProductRateId)
+        {
+            var productDetail = await _productRateInfo.GetAsync(ProductRateId);
+            return Json(new { productDetail });
+        }
+
+        
     }
 }
 

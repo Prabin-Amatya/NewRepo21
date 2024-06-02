@@ -3,6 +3,7 @@ using IMS.Modes.Entity;
 using IMS.web.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration.UserSecrets;
 using System.Collections.Generic;
 
 namespace IMS.web.Controllers
@@ -86,11 +87,6 @@ namespace IMS.web.Controllers
 
         }
 
-        public async Task<IActionResult> Remove(int id)
-        {
-            return View(await _customerInfo.GetAsync(id));
-        }
-
         [HttpPost]
         public async Task<IActionResult> Remove(CustomerInfo customerInfo)
         {
@@ -98,6 +94,22 @@ namespace IMS.web.Controllers
             TempData["error"] = "Data Deleted Successfully";
             return RedirectToAction(nameof(Index));
 
+        }
+
+        [HttpPost]
+        [Route("/api/CustomerInfo/addCustomer")]
+        public async Task<IActionResult> addCustomer(CustomerInfo model)
+        {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = await  _userManager.FindByIdAsync(userId);
+
+            model.CreatedBy = user.Id;
+            model.CreatedDate = DateTime.Now;
+            model.StoreInfoId = user.StoreId;
+
+            var result = await _customerInfo.InsertAsync(model);
+            model.Id = result;
+            return Json(model);
         }
     }
 }
