@@ -1,0 +1,189 @@
+﻿@model IMS.Modes.ViewModels.TransactionViewModel
+
+<style>
+    .margin{
+        margin-top: -15px;
+    }
+
+    .summary {
+        border: 1px solid grey;
+    }
+</style>
+
+
+<div class="row">
+    <div class="col-12">
+        <p style="font-size:20px; text-align:center">@Model.StoreInfo.StoreName</p>
+    </div>
+    <div class="col-12">
+        <p style="font-size:20px; text-align:center">@Model.StoreInfo.Address</p>
+    </div>
+    <div class="col-12">
+        <p style="font-size:20px; text-align:center">Phone No: @Model.StoreInfo.PhoneNumber</p>
+    </div>
+    <div class="col-12">
+        <p style="font-size:20px; text-align:center">Address: @Model.StoreInfo.Address</p>
+    </div>
+
+    <div class="row margin">
+        <div class="col-9"><p><b> Pan No : @Model.StoreInfo.PanNo</b></p></div>
+    </div>
+    <div class="row margin">
+        <div class="col-3"><p><b> Invoice No: @Model.ProductInvoiceInfo.Id</b></p> </div>
+    </div>
+
+    <div class="row margin">
+        <div class="col-9"><p><b> Customer Name: @Model.ProductInvoiceInfo.CustomerInfo.CustomerName</b></p> </div>
+        <div class="col-3"><p><b> Date: @DateTime.Now.ToString("yyyy-MM-dd")</b></p> </div>
+    </div>
+
+    <div class="row margin">
+        <div class="col-9"><p><b> Address: @Model.ProductInvoiceInfo.CustomerInfo.Address</b></p> </div>
+        <div class="col-3"><p><b> PhoneNumber: @Model.ProductInvoiceInfo.CustomerInfo.PhoneNumber</b></p> </div>
+    </div>
+
+    <div class="row margin">
+        <div class="col-9"><p><b>Buyer's Pan No : @Model.ProductInvoiceInfo.CustomerInfo.PanNo</b></p></div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-bordered">
+                @{
+                    int count = 1;
+                }
+                <tr>
+                    <th>S.N.</th>
+                    <th>Category</th>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Unit</th>
+                    <th>Rate</th>
+                    <th>Amount</th>
+                </tr>
+          
+                @foreach(var items in Model.ProductInvoiceDetailInfos)
+            {
+                <tr>
+                    <td>@count</td>
+                    <td>@items.ProductRateInfo.CategoryInfo.CategoryName</td>
+                    <td>@items.ProductRateInfo.ProductInfo.ProductName</td>
+                    <td>@items.Quantity</td>
+                    <td>@items.ProductRateInfo.ProductInfo.UnitInfo.UnitName</td>
+                    <td>@items.Rate</td>
+                    <td>@items.Amount</td>
+                    <td hidden>@count = count+1</td>
+                </tr>
+            }
+            </table>
+        </div>
+    </div>
+
+
+    <div class="row" style="margin-top:-15px; margin-right:0px; margin-left:0px;">
+        <div class="col-6 summary" style="border-right:0px"> 
+            <div class="col-6">
+                <div class="row summarydown">
+                    <div class="col-6">
+                        <p>Sub Total</p>
+                    </div>
+                    <div class="col-6">
+                        <p>@Model.ProductInvoiceInfo.NetAmount</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <p>Discount</p>
+                    </div>
+                    <div class="col-6">
+                        <p>@Model.ProductInvoiceInfo.DiscountAmount</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <p>Grand Total</p>
+                    </div>
+                    <div class="col-6">
+                        <p>@Model.ProductInvoiceInfo.TotalAmount</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 summary" style="margin-left:-20px">
+            <div class="col-6">
+                <div class="row summarydown">
+                    <div class="col-6">
+                        <p>Sub Total</p>
+                    </div>
+                    <div class="col-6">
+                        <p>@Model.ProductInvoiceInfo.NetAmount</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <p>Discount</p>
+                    </div>
+                    <div class="col-6">
+                        <p>@Model.ProductInvoiceInfo.DiscountAmount</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-5">
+                        <p>Grand Total</p>
+                    </div>
+                    <div class="col-5">
+                        <p>@Model.ProductInvoiceInfo.TotalAmount</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+
+<br />
+<br />
+<br />
+
+<div class="row">
+    <div class="col-3">
+        
+    </div>
+     <div class="col-3">
+        
+    </div>
+    <div class="col-3">
+        
+    </div>
+    <div class="col-3">
+        <p style="margin:0; padding:0"> @ViewBag.TaxCreater</p>
+        <p>___________________</p>
+        <p><b>Created By</b></p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-3">
+    </div>
+    <div class="col-3">
+    </div>
+    <div class="col-3">
+    </div>
+    <div class="col-3">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-3">
+    </div>
+    <div class="col-3">
+    </div>
+    <div class="col-3">
+    </div>
+    <div class="col-3">
+    </div>
+</div>
+

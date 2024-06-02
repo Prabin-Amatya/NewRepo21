@@ -11,7 +11,7 @@
     }
 </style>
 
-<div class="row" style="border:2px solid azure; padding:5px">
+<div class="row" style="border:2px solid #24b3b3; padding:5px">
         <input id="availableQuantity" hidden/>
         <p style="font-size:18px; text-align:center">Select Product</p>
         <form>
@@ -103,9 +103,7 @@
         <div class="row">
             <p style="font-size:18px;text-align:center">Purchase List </p>
             <div class="row col-12">
-
                 <table class="table table-bordered" id="listtable" width="100%"></table>
-
             </div>
 
 
@@ -151,7 +149,7 @@
                 <label class="col-form-label">Discount :</label>
             </div>
             <div class="col-6">
-                <input id="discount" class="form-control">
+                <input id="discount" class="form-control" onchange="totalamount()">
             </div>
 
         </div>
@@ -165,6 +163,13 @@
             </div>
 
         </div>
+
+        <div class="row">
+            <div class="col-12">
+                <textarea placeholder="Remarks" class="form-control" id="remark" rows="1"></textarea>
+            </div>
+        </div>
+
         <hr />
         <div class="row">
             <div class="form-group">
@@ -183,7 +188,7 @@
                 <a class="btn btn-secondary px-4 " style="margin-top:30px">Back</a>
             </div>
             <div class="col-6">
-                <a class="btn btn-primary px-4 float-end" style="margin-top:30px">Submit</a>
+                <a class="btn btn-primary px-4 float-end" style="margin-top:30px" id="saveTransaction">Submit</a>
             </div>
 
         </div>
@@ -234,6 +239,17 @@
                             <span class="text-danger" asp-validation-for="CustomerInfo.Address"></span>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label" asp-for="CustomerInfo.Address"></label>
+                            <select id="paymentMethod"class="form-control" asp-for="CustomerInfo.Address" >
+                                <option selected value="0">Cash</option>
+                                <option value="1">Online</option>
+                                <option value="2">Check</option>
+                                <option value="3">Bank Deposit</option>
+                            </select>
+                        </div>
+                    </div>
                </form>
            </div>
            <div class="modal-footer">
@@ -248,6 +264,9 @@
 
 
 @section Scripts{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    
 <script>
     
         
@@ -258,6 +277,7 @@
         $('#addbtn').click(function () {
             addtolist();
         });
+
 
         
     function addtolist() {
@@ -366,8 +386,26 @@
  }
         
     function DeleteRows(btn){
+
         var row = btn.parentNode.parentNode;
         console.log(row.rowIndex);
+
+        var amount = document.getElementById('dynamictable').rows[row.rowIndex].cells[6].innerHTML;
+        var quantity = document.getElementById('dynamictable').rows[row.rowIndex].cells[5].innerHTML;
+
+        var cnt = $('#totalCount').val();
+        var newcnt = parseFloat(cnt) - 1;
+        $('#totalCount').val(newcnt);
+        
+        var qty = $('#totalQuantity').val();
+        var totqty = parseFloat(qty) - parseFloat(quantity);
+        $('#totalQuantity').val(totqty);
+
+        var amt = $('#amt').val();
+        var totamt = parseFloat(amt) - parseFloat(amount);
+        $('#amt').val(totamt);
+        totalamount();
+
         row.parentNode.removeChild(row);
     };
 
@@ -395,8 +433,10 @@
 
     function totalamount(){
 
-        var amt = $('#amt').val();
-        $('#totalAmount').val(amt);
+        var dis = ($('#discount').val()=='')?0 : $('#discount').val();
+        var amt = ($('#amt').val()=='')?0 : $('#amt').val(); 
+        var tot = parseFloat(amt) - parseFloat(dis);
+        $('#totalAmount').val(tot);
     }
 
     function reset() {
@@ -443,22 +483,20 @@
             var values = ['Category', 'Product', 'Price','Batch','Unit', 'Amount', 'Quantity'];
             var id = '';
             var isValid = true;
+            debugger;
             for(let i=0; i<values.length; i++)
             {
                 id = val + values[i];
                 if (!currValues[i]) { 
                     $(id).text(values[i] + ' field is empty');
                     isValid = false;
-                    id = '';
                 }
-
                 else if (!(currValues[i] instanceof String)) {
                     if (isNaN(currValues[i]) || currValues[i] < 0) {
                         $(id).text(values[i] + ' field is invalid');
                     }
                 }
                 else  $(id).text('');
-
             }
         return isValid;
     }
@@ -502,7 +540,7 @@
                 method: 'POST'
             }).done(function (data) {
                 console.log(data);
-                optionval = '<option disabled selected> --Choose--</option>';
+                optionval = '<option value="null" disabled selected> --Choose--</option>';
                 $.each(data['productList'], function (index, value) {
                     optionval += '<option value="' + value['id'] + '">' + value['productName'] + '</option>';
                 });
@@ -525,7 +563,7 @@
                 method: 'POST'
             }).done(function (data) {
                 console.log(data);
-                optionval = '<option disabled selected> --Choose--</option>';
+                optionval = '<option value="null" disabled selected> --Choose--</option>';
                 $.each(data['batchList'], function (index, value) {
                     optionval += '<option value="' + value['id'] + '">' + value['batchNo'] + '</option>';
                 });
@@ -569,6 +607,65 @@
                     $('#availableQuantity').val(data.productDetail.quantity);
                 }).fail(function () {
                 });
+
+
+            $('#saveTransaction').click(function () {
+                saveTransaction();
+            });
+
+            function saveTransaction() {
+                var transactionViewModel = "";
+                var productInvoiceDetailInfos = "";
+                var productInvoiceInfo = {
+                    CustomerInfoId: $("#customerInfo").val(),
+                    NetAmount: $("#amt").val(),
+                    DiscountAmount: $("#discount").val(),
+                    TotalAmount: $("#totalAmount").val(),
+                    Remarks: $("#remark").val(),
+                    PaymentMethod: $("#paymentMethod").val()
+                };
+
+                var TableData = new Array();
+                $('#dynamictable tr').each(function (row, tr) {
+                    TableData[row] = {
+                        "ProductRateInfoId": $(tr).find('td:eq(2)').text(),
+                        "Rate": $(tr).find('td:eq(4)').text(),
+                        "Quantity": $(tr).find('td:eq(5)').text(),
+                        "Amount": $(tr).find('td:eq(6)').text()
+                    };
+                });
+
+                TableData.shift();
+
+                console.log(TableData);
+                var transactionViewModel = {
+                    productInvoiceInfo: productInvoiceInfo,
+                    productInvoiceDetailInfos: TableData
+
+                };
+
+            $.ajax({
+                url: '/api/Transaction/saveTransaction',
+                data: { transactionViewModel: transactionViewModel },
+                method: 'POST'
+            }).done(function (data) {
+
+                console.log(data);
+
+                toastr.success('Transaction Completed')
+                debugger;
+                window.open('PrintReport?Id='+ data);  
+                
+                setTimeout(function () {
+                        location.href = '/TransactionInfo/Index';
+                }, 1500);
+
+                
+                
+            }).fail(function(){
+
+            });
+         }
     }
 </script>
 }

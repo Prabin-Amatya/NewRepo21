@@ -44,6 +44,7 @@ namespace IMS.web.Controllers
             _customerInfo = customerInfo;
             _productInvoiceInfo = productInvoiceInfo;
             _productInvoiceDetailInfo = productInvoiceDetailInfo;
+            
         }
 
         public async Task<IActionResult> Index()
@@ -52,11 +53,10 @@ namespace IMS.web.Controllers
             var user = await _userManager.FindByIdAsync(userId);
             var store = await _storeInfo.GetAsync(user.StoreId);
 
-            ViewBag.CategoryInfos = await _categoryInfo.GetAllAsync(p => p.IsActive == true && p.StoreInfoId == store.Id);
-            ViewBag.UnitInfos = await _unitInfo.GetAllAsync(p => p.IsActive == true);
-            ViewBag.ProductInfos = await _productInfo.GetAllAsync(p => p.IsActive == true && p.StoreInfoId == store.Id);
-            var transactionInfo = await _productInvoiceInfo.GetAllAsync();
-            return View(transactionInfo);
+            ViewBag.CustomerInfos = await _customerInfo.GetAllAsync(p => p.StoreInfoId == store.Id);
+            var productInvoice = await _productInvoiceInfo.GetAllAsync(p=>p.StoreInfoId == store.Id);
+
+            return View(productInvoice);
         }
         public async Task<IActionResult> Transaction(int id)
         {
@@ -300,7 +300,124 @@ namespace IMS.web.Controllers
             return Json(new { productDetail });
         }
 
-        
+        [HttpPost]
+        [Route("/api/Transaction/saveTransaction")]
+        public async Task<int> saveTransaction(TransactionViewModel transactionViewModel)
+        {
+            try
+            {
+                var userId = _userManager.GetUserId(HttpContext.User);
+                var user = await _userManager.FindByIdAsync(userId);
+
+                //var InvoiceNo = 0;
+                //var productinvoiceinfo = await _productInvoiceInfo.GetAsync();
+                transactionViewModel.ProductInvoiceInfo.CustomerInfoId = transactionViewModel.ProductInvoiceInfo.CustomerInfoId;
+                transactionViewModel.ProductInvoiceInfo.CreatedBy = userId;
+                transactionViewModel.ProductInvoiceInfo.TransactionDate = DateTime.Now;
+                transactionViewModel.ProductInvoiceInfo.CreatedDate = DateTime.Now;
+                transactionViewModel.ProductInvoiceInfo.StoreInfoId = user.StoreId;
+                transactionViewModel.ProductInvoiceInfo.BillStatus = 1;
+                transactionViewModel.ProductInvoiceInfo.IsActive = true;
+                transactionViewModel.ProductInvoiceInfo.InvoiceNo = "1";
+                var invoiceId = await _productInvoiceInfo.InsertAsync(transactionViewModel.ProductInvoiceInfo);
+
+                if (transactionViewModel.ProductInvoiceDetailInfos.Count() > 0)
+                {
+
+                    foreach (var items in transactionViewModel.ProductInvoiceDetailInfos)
+                    {
+                        //ProductInvoiceDetail
+                        ProductInvoiceDetailInfo productInvoiceDetailInfo = new ProductInvoiceDetailInfo();
+                        productInvoiceDetailInfo.ProductInvoiceInfoId = invoiceId;
+                        productInvoiceDetailInfo.ProductRateInfoId = items.ProductRateInfoId;
+                        productInvoiceDetailInfo.Rate = items.Rate;
+                        productInvoiceDetailInfo.Quantity = items.Quantity;
+                        productInvoiceDetailInfo.Amount = items.Amount;
+                        productInvoiceDetailInfo.CreatedBy = userId;
+                        productInvoiceDetailInfo.CreatedDate = DateTime.Now;
+                        await _productInvoiceDetailInfo.InsertAsync(productInvoiceDetailInfo);
+
+
+
+                        //transactionInfo
+                        var productRateInfo = await _productRateInfo.GetAsync(items.ProductRateInfoId);
+                        var product = await _productInfo.GetAsync(productRateInfo.ProductInfoId);
+
+                        TransactionInfo transactioninfo = new TransactionInfo();
+                        transactioninfo.TransactionType = "Sell";
+                        transactioninfo.CategoryInfoId = productRateInfo.CategoryInfoId;
+                        transactioninfo.ProductInfoId = productRateInfo.ProductInfoId;
+                        transactioninfo.Rate = items.Rate;
+                        transactioninfo.Amount = items.Amount;
+                        transactioninfo.Quantity = items.Quantity;
+                        transactioninfo.UnitInfoId = product.UnitInfoId;
+                        transactioninfo.StoreInfoId = productRateInfo.StoreInfoId;
+                        transactioninfo.ProductRateInfoId = productRateInfo.Id;
+                        if (productRateInfo.IsActive)
+                            transactioninfo.IsActive = "true";
+                        else
+                            transactioninfo.IsActive = "false";
+                        transactioninfo.CreatedDate = DateTime.Now;
+                        transactioninfo.CreatedBy = user.Id;
+                        transactioninfo.ModifiedBy = "";
+                        transactioninfo.StoreInfoId = user.StoreId;
+                        await _transactionInfo.InsertAsync(transactioninfo);
+
+
+
+                        //Product Rate
+                        productRateInfo.SoldQuantity += items.Quantity;
+                        productRateInfo.RemainingQuantity -= items.Quantity;
+                        productRateInfo.ModifiedBy = userId;
+                        productRateInfo.ModifiedDate = DateTime.Now;
+                        await _productRateInfo.UpdateAsync(productRateInfo);
+
+
+
+                        //Stock
+                        var stockdet = await _stockInfo.GetAsync(p => p.ProductRateInfoId == productRateInfo.ProductInfoId && p.StoreInfoId == user.StoreId);
+                        var qty = stockdet.Quantity - items.Quantity;
+                        stockdet.Quantity = qty;
+                        stockdet.ModifiedBy = userId;
+                        stockdet.ModifiedDate = DateTime.Now;
+                        await _stockInfo.UpdateAsync(stockdet);
+                    }
+                }
+                return invoiceId;
+            }
+            catch(Exception ex) {
+                return 1;
+            }   
+            
+         }
+
+        [HttpGet]
+        public async Task<IActionResult> PrintReport(int Id)
+        {
+            
+
+            ViewBag.CategoryInfos = await _categoryInfo.GetAllAsync();
+            ViewBag.UnitInfos = await _unitInfo.GetAllAsync(p => p.IsActive == true);
+            ViewBag.ProductInfos = await _productInfo.GetAllAsync();
+            ViewBag.CustomerInfos = await _customerInfo.GetAllAsync();
+            ViewBag.ProductRateInfos = await _productRateInfo.GetAllAsync(p => p.IsActive == true);
+
+           
+
+            var invoiceInfo = await _productInvoiceInfo.GetAsync(Id);
+            var user = await _userManager.FindByIdAsync(invoiceInfo.CreatedBy);
+            ViewBag.TaxCreater = user.FirstName+' '+user.MiddleName+' '+user.LastName + ' ';
+
+            TransactionViewModel transactionViewModel = new TransactionViewModel();
+            transactionViewModel.ProductInvoiceInfo = invoiceInfo; 
+            transactionViewModel.StoreInfo =await _storeInfo.GetAsync(user.StoreId);  
+            transactionViewModel.ProductInvoiceDetailInfos = await _productInvoiceDetailInfo.GetAllAsync(p => p.ProductInvoiceInfoId == Id);
+            return View(transactionViewModel);
+        }
+
+
+
+
     }
 }
 

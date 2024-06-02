@@ -267,8 +267,8 @@ namespace IMS.web.Controllers
             {
                 var productList = await _productInfo.GetAllAsync(p=>p.CategoryInfoId==CategoryId);
                 return Json(new { productList });
-
             }
+
         [HttpPost]
         [Route("/api/ProductRate/getUnit")]
         public async Task<IActionResult> getUnit(int ProductId)
