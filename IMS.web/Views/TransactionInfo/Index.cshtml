@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<IMS.Modes.Entity.ProductInvoiceInfo>
+@using IMS.Modes.Enum
 
 <div class="row">
     <div class="col-12">
@@ -23,7 +24,9 @@
                     <th>
                         Total Amount
                     </th>
-                    
+                    <th>
+                        Payment Method
+                    </th>
                     <th>
                         Bill Status
                     </th>
@@ -51,14 +54,15 @@
                             }
 
                         <td>@items.TotalAmount</td>
-                        <td>@items.BillStatus</td>
+                        <td>@Html.Raw((PaymentMethodEnum)items.PaymentMethod)</td>
+                        <td>@Html.Raw((BillStatusEnum)items.BillStatus)</td>
                         <td>@items.CancellationRemarks</td>
                             <td>
                                 @if (items.BillStatus == 1)
                                 {
-                                    <a class="btn btn-danger">Cancel</a>
+                                    <a class="btn btn-danger" onclick="cancel(@items.Id)">Cancel</a>
+                                    <a class="btn btn-primary" asp-action="PrintReport" onclick="print('@items.Id')" asp-route-id="@items.Id">Print</a>
                                 }
-                                <a class="btn btn-primary" asp-action="PrintReport" asp-route-id ="@items.Id">Print</a>
                             </td>
                     </tr>
                 }
@@ -67,3 +71,83 @@
         </table>
     </div>
 </div>
+
+
+
+<div class="modal" tabindex="-1" id="cancelmodal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-floating">
+                    <input id="itemId" hidden />
+                    <input id="cancelremark" class="form-control" />
+                    <label class="control-label">Cancellation Remarks*</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" onclick="CancelTransaction()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script>
+
+        function cancel(itemId){
+
+            $('#itemId').val(itemId);
+            $('#cancelmodal').modal('show');
+
+
+        }
+
+        function CancelTransaction(){
+
+            var id = $('#itemId').val();
+            var cancelremarks = $('#cancelremarks').val();
+
+            if(cancelremarks='')
+            {
+                alert('Please enter cancel remarks');
+            }
+
+            $.ajax({
+                url: '/api/Transaction/CancelTransaction',
+                data: { invoiceId:id, cancellationRemarks:cancelremarks},
+                method: 'POST'
+            }).done(function (data) {
+
+                console.log(data);
+
+                toastr.success('Delete Success')
+                debugger;
+                window.open('PrintReport?Id=' + data);
+
+                setTimeout(function () {
+                    location.href = '/TransactionInfo/Index';
+                }, 1500);
+
+
+
+            }).fail(function () {
+
+            });
+        }
+
+        function print(itemId) {
+            window.open('PrintReport?Id='+itemId);
+        }
+    </script>
+
+
+
+
+}

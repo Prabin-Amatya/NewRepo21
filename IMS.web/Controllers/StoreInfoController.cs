@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IMS.web.Controllers
 {
-    //[Authorize(Roles = "ADMIN")]
+    [Authorize(Roles = "ADMIN")]
     public class StoreInfoController : Controller
     {
         private readonly ICrudService<StoreInfo> _storeCrudService;

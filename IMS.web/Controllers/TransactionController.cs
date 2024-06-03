@@ -394,7 +394,7 @@ namespace IMS.web.Controllers
         [HttpGet]
         public async Task<IActionResult> PrintReport(int Id)
         {
-            
+
 
             ViewBag.CategoryInfos = await _categoryInfo.GetAllAsync();
             ViewBag.UnitInfos = await _unitInfo.GetAllAsync(p => p.IsActive == true);
@@ -407,18 +407,101 @@ namespace IMS.web.Controllers
             var invoiceInfo = await _productInvoiceInfo.GetAsync(Id);
             var user = await _userManager.FindByIdAsync(invoiceInfo.CreatedBy);
             ViewBag.TaxCreater = user.FirstName+' '+user.MiddleName+' '+user.LastName + ' ';
+            
 
             TransactionViewModel transactionViewModel = new TransactionViewModel();
             transactionViewModel.ProductInvoiceInfo = invoiceInfo; 
             transactionViewModel.StoreInfo =await _storeInfo.GetAsync(user.StoreId);  
             transactionViewModel.ProductInvoiceDetailInfos = await _productInvoiceDetailInfo.GetAllAsync(p => p.ProductInvoiceInfoId == Id);
+            ViewBag.TotalAmount = ConvertMoneyToWords((int)transactionViewModel.ProductInvoiceInfo.TotalAmount);
+
+
             return View(transactionViewModel);
         }
+        public static string ConvertMoneyToWords(int amount)
+        {
+            if (amount == 0)
+                return "zero rupees";
 
+            string rupeeWords = ConvertNumberToWords(amount) + " rupee" + (amount == 1 ? "" : "s");
+            return rupeeWords;
+        }
 
+        private static string ConvertNumberToWords(int number)
+        {
+            if (number == 0)
+                return "zero";
 
+            string[] unitsMap = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen" };
+            string[] tensMap = { "zero", "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety" };
 
+            if (number < 0)
+                return "minus " + ConvertNumberToWords(Math.Abs(number));
+
+            string words = "";
+
+            if ((number / 10000000) > 0)
+            {
+                words += ConvertNumberToWords(number / 10000000) + " crore ";
+                number %= 10000000;
+            }
+
+            if ((number / 100000) > 0)
+            {
+                words += ConvertNumberToWords(number / 100000) + " lakh ";
+                number %= 100000;
+            }
+
+            if ((number / 1000) > 0)
+            {
+                words += ConvertNumberToWords(number / 1000) + " thousand ";
+                number %= 1000;
+            }
+
+            if ((number / 100) > 0)
+            {
+                words += ConvertNumberToWords(number / 100) + " hundred ";
+                number %= 100;
+            }
+
+            if (number > 0)
+            {
+                if (words != "")
+                    words += "and ";
+
+                if (number < 20)
+                    words += unitsMap[number];
+                else
+                {
+                    words += tensMap[number / 10];
+                    if ((number % 10) > 0)
+                        words += "-" + unitsMap[number % 10];
+                }
+            }
+
+            return words.Trim();
+        }
+
+        [HttpPost]
+        [Route("/api/Transaction/CancelTransaction")]
+        public async Task<IActionResult> CancelTransaction(int invoiceId, string cancellationRemarks)
+        {
+
+            var userId = _userManager.GetUserId(HttpContext.User);
+
+            var productinvoiceinfo = await _productInvoiceInfo.GetAsync(invoiceId);
+
+            productinvoiceinfo.BillStatus = 2;
+            productinvoiceinfo.CancellationRemarks = cancellationRemarks;
+            productinvoiceinfo.ModifiedDate = productinvoiceinfo.ModifiedDate = DateTime.Now;
+            productinvoiceinfo.ModifiedBy = userId;
+            await _productInvoiceInfo.UpdateAsync(productinvoiceinfo);
+            return Json(1);
+        }
     }
+
+
 }
+
 
 

@@ -242,11 +242,8 @@
                     <div class="row">
                         <div class="col-6">
                             <label class="form-label" asp-for="CustomerInfo.Address"></label>
-                            <select id="paymentMethod"class="form-control" asp-for="CustomerInfo.Address" >
-                                <option selected value="0">Cash</option>
-                                <option value="1">Online</option>
-                                <option value="2">Check</option>
-                                <option value="3">Bank Deposit</option>
+                            <select id="paymentMethod"class="form-control" asp-for="CustomerInfo.Address" asp-items="@(Html.GetEnumSelectList<IMS.Modes.Enum.PaymentMethodEnum>())">
+                               
                             </select>
                         </div>
                     </div>
