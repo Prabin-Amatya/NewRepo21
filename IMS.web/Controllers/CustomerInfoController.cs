@@ -111,6 +111,16 @@ namespace IMS.web.Controllers
             model.Id = result;
             return Json(model);
         }
+
+        [HttpPost]
+        [Route("/api/CustomerInfo/getCustomer")]
+        public async Task<IActionResult> getCustomer()
+        {
+            var customerListAll = await _customerInfo.GetAllAsync();
+            return Json(customerListAll);
+        }
+
+
     }
 }
     

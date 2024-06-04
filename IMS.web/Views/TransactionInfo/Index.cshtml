@@ -9,7 +9,7 @@
 
 <div class="row">
     <div class="col-12">
-        <table>
+        <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>
@@ -61,7 +61,7 @@
                                 @if (items.BillStatus == 1)
                                 {
                                     <a class="btn btn-danger" onclick="cancel(@items.Id)">Cancel</a>
-                                    <a class="btn btn-primary" asp-action="PrintReport" onclick="print('@items.Id')" asp-route-id="@items.Id">Print</a>
+                                    <a class="btn btn-primary"  onclick="print('@items.Id')" asp-route-id="@items.Id">Print</a>
                                 }
                             </td>
                     </tr>
@@ -90,7 +90,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger" onclick="CancelTransaction()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="CancelTransaction()">Cancel</button>
             </div>
         </div>
     </div>
@@ -110,9 +110,9 @@
         }
 
         function CancelTransaction(){
-
+            debugger;
             var id = $('#itemId').val();
-            var cancelremarks = $('#cancelremarks').val();
+            var cancelremarks = $('#cancelremark').val();
 
             if(cancelremarks='')
             {
@@ -121,17 +121,16 @@
 
             $.ajax({
                 url: '/api/Transaction/CancelTransaction',
-                data: { invoiceId:id, cancellationRemarks:cancelremarks},
+                data: JSON.stringify({ invoiceId:id, cancellationRemarks:cancelremarks}),
                 method: 'POST'
             }).done(function (data) {
 
                 console.log(data);
 
-                toastr.success('Delete Success')
-                debugger;
-                window.open('PrintReport?Id=' + data);
+                
 
                 setTimeout(function () {
+                    toastr.success('Delete Success')
                     location.href = '/TransactionInfo/Index';
                 }, 1500);
 
@@ -143,7 +142,7 @@
         }
 
         function print(itemId) {
-            window.open('PrintReport?Id='+itemId);
+            window.open('/TransactionInfo/PrintReport?Id='+itemId);
         }
     </script>
 
