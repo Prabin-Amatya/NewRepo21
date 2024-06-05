@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using IMS.Modes.ViewModels;
 
 
 
@@ -15,6 +16,7 @@ namespace IMS.Infrastructure
     {
         public IMSDbContext(DbContextOptions<IMSDbContext> options) : base(options) { }
 
+        public DbSet<CustomerReportViewModel> CustomerReportViewModels {  get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new StoreConfiguration());

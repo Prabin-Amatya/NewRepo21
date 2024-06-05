@@ -13,13 +13,18 @@
         border-bottom: 9px solid azure;
     }
     .list:hover{
-        filter: brightness(20%);    }
+        filter: brightness(20%);
+        }
+
+    .beads{
+        list-style-type: none;
+    }
 </style>
 
 <p>Custom Report</p>
-<form>
+<form asp-action="Index">
    
-     <div class="row">
+    @*  <div class="row">
         <div class="col-2">
                 <div class="form-floating">
                 <select asp-for="search.CustomerId" id="CustomerInfoId" class="form-control" asp-items="@(new SelectList(ViewBag.customerInfo,"Id","CustomerName"))">
@@ -28,14 +33,15 @@
                     <label asp-for="search.CustomerId " class="form-label">-CHOOSE-</label>
                     <span id="ValidCustomer" class="text-danger"></span>
                 </div>
-        </div> 
+        </div>  *@
 
-    @*
+    
     <div class="row">
         <div class="col-2">
             <div class="form-floating" style="position:relative">
-                <input class="form-control" id="customerName" style="margin-bottom:2px"/>
-                <label class="form-label">Customer Name</label>
+                <input asp-for="search.CustomerId" id="customerId" hidden />
+                <textarea class="form-control" id="customerName" style="margin-bottom:2px"></textarea>
+                <label class="form-label" for="customeName">Customer Name</label>
                 <span id="cue" style="position:absolute; top:25px; left:1vw; width:91%; background:white" class="text-md-start">Type A Name</span>
                 <span id="validstartdate" style="color:lightseagreen"></span>
             </div>
@@ -45,7 +51,7 @@
                 
             
         </div>
-        *@
+       
         <div class="col-2">
             <div class="form-floating">
                 <select asp-for="search.SupplierId" id="SupplierId" class="form-control" asp-items="@(new SelectList(ViewBag.supplierInfo,"Id","SupplierName"))">
@@ -87,7 +93,7 @@
 </form>
 
 @section Scripts{
-   @*  <script>
+    <script>
 
         var customerList;
         $(document).ready(function () {
@@ -111,35 +117,36 @@
                 if (name != '') {
                     $.each(customerList, function (index, value) {
                         if (value['customerName'].toLowerCase().match(regularExp)) {
+                        optionList += '<li class="beads"></li><li class="beads"></li>';
                             optionList += '<li value="' + value['id'] + '" class="list"' + '>' + value['customerName'] + '</li>';
                         }
                     });
                 }
                 $('#CustomerList').append(optionList);
             });
-       
 
-            $('#cue').click(function () {
-                $('#cue').hide();
-                $('#customerName').focus();
-            });
+        $('#cue').click(function () {
+            $('#cue').hide();
+            $('#customerName').focus();
+             
+        });
 
             $('#customerName').focusout(function () {
                 var name =  $('#customerName').val();
-                if(name=='')
-                {$('#cue').show();
-                $('#CustomerList').empty();}
+                
+                if (name == '') {
+                    $('#cue').show();
+                    $('#CustomerList').empty();
+                }
             });
 
         $('#CustomerList').on('click', 'li', function () {
             debugger;
             var value = $(this).val();
             var name = $(this).text();
-            $('#customerName').val(value);
-            $('#customerName').text('');
-            $('#cue').text(name);
-            $('#cue').show();
+            $('#customerId').val(value);
+            $('#customerName').val(name);
             $('#CustomerList').empty();
         });
-    </script> *@
+    </script>
 }

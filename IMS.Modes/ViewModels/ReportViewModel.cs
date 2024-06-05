@@ -8,5 +8,6 @@ namespace IMS.Modes.ViewModels
 {
     public class ReportViewModel { 
         public SearchCriteria search{get; set;}
+        public IEnumerable<CustomerReportViewModel> CustomerReportViewModels { get; set;}
     }
 }
