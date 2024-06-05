@@ -13,30 +13,31 @@
         font-size: 17px;
         border-bottom: 9px solid azure;
     }
-    .list:hover{
-        filter: brightness(20%);
+
+        .list:hover {
+            filter: brightness(20%);
         }
 
-    .beads{
+    .beads {
         list-style-type: none;
     }
 </style>
 
 <p>Custom Report</p>
 <form asp-action="Search" method="get">
-   
-    @*  <div class="row">
-        <div class="col-2">
-                <div class="form-floating">
-                <select asp-for="search.CustomerId" id="CustomerInfoId" class="form-control" asp-items="@(new SelectList(ViewBag.customerInfo,"Id","CustomerName"))">
-                    <option value="null" selected><textbox>--CHOOSE-</textbox></option>
-                </select>
-                    <label asp-for="search.CustomerId " class="form-label">-CHOOSE-</label>
-                    <span id="ValidCustomer" class="text-danger"></span>
-                </div>
-        </div>  *@
 
-    
+    @*  <div class="row">
+    <div class="col-2">
+    <div class="form-floating">
+    <select asp-for="search.CustomerId" id="CustomerInfoId" class="form-control" asp-items="@(new SelectList(ViewBag.customerInfo,"Id","CustomerName"))">
+    <option value="null" selected><textbox>--CHOOSE-</textbox></option>
+    </select>
+    <label asp-for="search.CustomerId " class="form-label">-CHOOSE-</label>
+    <span id="ValidCustomer" class="text-danger"></span>
+    </div>
+    </div>  *@
+
+
     <div class="row">
         <div class="col-2">
             <div class="form-floating" style="position:relative">
@@ -46,21 +47,20 @@
                 <span id="cue" style="position:absolute; top:25px; left:1vw; width:91%; background:white" class="text-md-start">Type A Name</span>
                 <span id="validstartdate" style="color:lightseagreen"></span>
             </div>
-                <ul id="CustomerList">
+            <ul id="CustomerList">
+            </ul>
 
-                </ul>
-                
-            
+
         </div>
-       
+
         @* <div class="col-2">
-            <div class="form-floating">
-                <select asp-for="search.SupplierId" id="SupplierId" class="form-control" asp-items="@(new SelectList(ViewBag.supplierInfo,"Id","SupplierName"))">
-                    <option value="null" selected disabled>-CHOOSE-</option>
-                </select>
-                <label asp-for="search.SupplierId " class="form-label"></label>
-                <span id="ValidSupplier"></span>
-            </div>
+        <div class="form-floating">
+        <select asp-for="search.SupplierId" id="SupplierId" class="form-control" asp-items="@(new SelectList(ViewBag.supplierInfo,"Id","SupplierName"))">
+        <option value="null" selected disabled>-CHOOSE-</option>
+        </select>
+        <label asp-for="search.SupplierId " class="form-label"></label>
+        <span id="ValidSupplier"></span>
+        </div>
         </div> *@
 
         <div class="col-2">
@@ -77,18 +77,18 @@
             <span id="validstartdate" class="text-danger"></span>
         </div>
         <div class="col-2 form-floating">
-            <input type="date" asp-for="search.EndDate" class="form-control"/>
+            <input type="date" asp-for="search.EndDate" class="form-control" />
             <label class="form-label">EndDate</label>
             <span id="validenddate" class="text-danger"></span>
         </div>
-   
-        
-        
+
+
+
 
         <div class="col-2">
             <button class="btn btn-primary">Submit</button>
         </div>
-        
+
 
     </div>
 </form>
@@ -164,61 +164,3 @@
     </div>
 }
 
-@section Scripts{
-    <script>
-
-        var customerList;
-        $(document).ready(function () {
-            $.ajax({
-                url: '/api/CustomerInfo/getCustomer',
-                data: {},
-                method: 'POST'
-            }).done(function (data) {
-                customerList = data;
-                console.log(customerList);
-            }).fail(function () { });
-        });
-
-
-            $('#customerName').keyup(function () {
-                $('#CustomerList').empty();
-                var name = $('#customerName').val().toLowerCase();
-                var optionList = '';
-                var regularExp = new RegExp('^' + name + '[A-Za-z]*$');
-
-                if (name != '') {
-                    $.each(customerList, function (index, value) {
-                        if (value['customerName'].toLowerCase().match(regularExp)) {
-                        optionList += '<li class="beads"></li><li class="beads"></li>';
-                            optionList += '<li value="' + value['id'] + '" class="list"' + '>' + value['customerName'] + '</li>';
-                        }
-                    });
-                }
-                $('#CustomerList').append(optionList);
-            });
-
-        $('#cue').click(function () {
-            $('#cue').hide();
-            $('#customerName').focus();
-             
-        });
-
-            $('#customerName').focusout(function () {
-                var name =  $('#customerName').val();
-                
-                if (name == '') {
-                    $('#cue').show();
-                    $('#CustomerList').empty();
-                }
-            });
-
-        $('#CustomerList').on('click', 'li', function () {
-            debugger;
-            var value = $(this).val();
-            var name = $(this).text();
-            $('#customerId').val(value);
-            $('#customerName').val(name);
-            $('#CustomerList').empty();
-        });
-    </script>
-}

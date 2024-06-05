@@ -23,31 +23,25 @@ namespace IMS.web.Controllers
             _rawSqlRepository = rawSqlRepository;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(ReportViewModel reportviewModel)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
             var user = await _userManager.FindByIdAsync(userId);
             ViewBag.supplierInfo =await _supplierInfo.GetAllAsync(p => p.IsActive == true && p.StoreInfoId == user.StoreId);
-
             ViewBag.customerInfo =await _customerInfo.GetAllAsync(p=>p.StoreInfoId == user.StoreId);
 
 
-            ReportViewModel reportviewModel = new ReportViewModel();
             reportviewModel.search = new SearchCriteria();
-
-            var result = _rawSqlRepository.FromSql<CustomerReportViewModel>($"usp_GetTransactionInfo @customerId, @PaymentMethodId, @startDate, @endDate",
-              new SqlParameter("@customerId", reportviewModel.search.CustomerId == null ?(object) DBNull.Value : reportviewModel.search.CustomerId),
-              new SqlParameter("@PaymentMethodId", reportviewModel.search.PaymentMethod == null ? (object)DBNull.Value : reportviewModel.search.PaymentMethod),
-              new SqlParameter("@startDate", reportviewModel.search.StartDate == null ? (object)DBNull.Value : reportviewModel.search.StartDate),
-              new SqlParameter("@endDate", reportviewModel.search.EndDate == null ? (object)DBNull.Value : reportviewModel.search.EndDate)
-              ).ToList();
-
             return View(reportviewModel);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Index(ReportViewModel reportviewModel)
+
+        public async Task<IActionResult> Search(ReportViewModel reportviewModel)
         {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = await _userManager.FindByIdAsync(userId);
+            ViewBag.supplierInfo = await _supplierInfo.GetAllAsync(p => p.IsActive == true && p.StoreInfoId == user.StoreId);
+            ViewBag.customerInfo = await _customerInfo.GetAllAsync(p => p.StoreInfoId == user.StoreId);
 
             var result = _rawSqlRepository.FromSql<CustomerReportViewModel>($"usp_GetTransactionInfo @customerId, @PaymentMethodId, @startDate, @endDate",
               new SqlParameter("@customerId", reportviewModel.search.CustomerId == null ? (object)DBNull.Value : reportviewModel.search.CustomerId),
@@ -56,7 +50,8 @@ namespace IMS.web.Controllers
               new SqlParameter("@endDate", reportviewModel.search.EndDate == null ? (object)DBNull.Value : reportviewModel.search.EndDate)
               ).ToList();
 
-            return RedirectToAction(nameof(Index));
+            reportviewModel.CustomerReportViewModels = result;
+            return View(nameof(Index), reportviewModel);
         }
     }
 }

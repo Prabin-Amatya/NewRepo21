@@ -17,7 +17,6 @@ namespace IMS.Infrastructure.Repository.CRUD
         public CrudService(IMSDbContext context)
         {
             _context=context;
-
         }
 
         public int Delete(TEntity entity)
