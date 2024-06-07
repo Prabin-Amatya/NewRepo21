@@ -25,5 +25,15 @@ namespace IMS.Modes.ViewModels
         public double DiscountAmount { get; set; }
 
         public double TotalAmount { get; set; }
+
+        public string CategoryName {  get; set; }
+        public string ProductName {  get; set; }
+
+        public double Quantity {  get; set; }
+
+        public string UnitName {  get; set; }
+        
+
+        public string SupplierName {  get; set; }
     }
 }

@@ -1,0 +1,301 @@
+﻿@model IMS.Modes.ViewModels.ReportViewModel
+@using IMS.Modes.Enum
+
+<style>
+    .list {
+        border: 1px solid #ffffff42;
+        filter: brightness(50%);
+        background: #ffffff17;
+        list-style-type: none;
+        width: auto;
+        color: #d5d5d5e6;
+        font-size: 17px;
+        border-bottom: 9px solid azure;
+        flex-flow: horizontal;
+    }
+
+        .list:hover {
+            filter: brightness(20%);
+        }
+
+    .beads {
+        list-style-type: none;
+    }
+
+    .beads {
+        margin-top: 7px;
+        margin-left: 43%;
+        width: 23px;
+        height: 22.5px;
+        background: #655e5ea8;
+        list-style-type: none;
+        border-radius: 25px;
+        margin-bottom: 7px;
+    }
+
+    .info{
+        font-weight: 700;
+        font-size: large;
+        width: 56vw;
+        color: #4f5656eb;
+        margin-left: 21px;
+        line-height: 23px;
+    }
+
+    .dis{
+        display: none;
+        background: #889393ba;
+        width: 6rem;
+        margin-left: 17px;
+        border-radius: 7px;
+    }
+</style>
+
+<p>Custom Report</p>
+<form asp-action="SearchDetailed" method="get">
+
+    @*  <div class="row">
+    <div class="col-2">
+    <div class="form-floating">
+    <select asp-for="search.CustomerId" id="CustomerInfoId" class="form-control" asp-items="@(new SelectList(ViewBag.customerInfo,"Id","CustomerName"))">
+    <option value="null" selected><textbox>--CHOOSE-</textbox></option>
+    </select>
+    <label asp-for="search.CustomerId " class="form-label">-CHOOSE-</label>
+    <span id="ValidCustomer" class="text-danger"></span>
+    </div>
+    </div>  *@
+
+
+    <div class="row">
+        <div class="col-4">
+            <div class="form-floating" style="position:relative">
+                <input asp-for="search.CustomerId" id="customerId" hidden />
+                <textarea class="form-control" id="customerName" style="margin-bottom:2px"></textarea>
+                <label class="form-label" for="customeName">Customer Name</label>
+                <span id="cue" style="position:absolute; top:25px; left:1vw; width:91%; background:white" class="text-md-start">Type A Name</span>
+                <span id="validstartdate" style="color:lightseagreen"></span>
+            </div>
+            <ul id="CustomerList" style="padding: 0px;">
+            </ul>
+        </div>
+
+         <div class="col-4">
+            <div class="form-floating">
+            <select asp-for="search.SupplierId" id="SupplierId" class="form-control" asp-items="@(new SelectList(ViewBag.supplierInfo,"Id","SupplierName"))">
+            <option value="null" selected disabled>-CHOOSE-</option>
+            </select>
+            <label asp-for="search.SupplierId " class="form-label"></label>
+            <span id="ValidSupplier"></span>
+            </div>
+        </div>
+
+        <div class="col-2">
+            <div class="form-floating">
+                <select asp-for="search.ProductId" id="ProductId" class="form-control" asp-items="@(new SelectList(ViewBag.productInfo,"Id","ProductName"))">
+                    <option value="null" selected disabled>-CHOOSE-</option>
+                </select>
+                <label asp-for="search.ProductId " class="form-label"></label>
+                <span id="ValidSupplier"></span>
+            </div>
+        </div>
+
+        <div class="col-4">
+            <div class="form-floating">
+                <select asp-for="search.CategoryId" id="CategoryId" class="form-control" asp-items="@(new SelectList(ViewBag.categoryInfo,"Id","CategoryName"))">
+                    <option value="null" selected disabled>-CHOOSE-</option>
+                </select>
+                <label asp-for="search.CategoryId " class="form-label"></label>
+                <span id="ValidSupplier"></span>
+            </div>
+        </div>
+
+        <div class="col-4">
+            <div class="form-floating">
+                <select asp-for="search.PaymentMethod" class="form-control" id="PaymentMethod" asp-for="search.PaymentMethod" asp-items="@(Html.GetEnumSelectList<IMS.Modes.Enum.PaymentMethodEnum>())">
+                </select>
+                <label class="form-label" asp-for="search.PaymentMethod">Payment Method</label>
+            </div>
+        </div>
+
+        <div class="col-4 form-floating">
+            <input type="date" asp-for="search.StartDate" class="form-control"  id="StartDate"/>
+            <label class="form-label">StartDate</label>
+            <span id="validstartdate" class="text-danger"></span>
+        </div>
+        <br />
+        <div class="col-4 form-floating">
+            <input type="date" asp-for="search.EndDate" class="form-control" id="EndDate" />
+            <label class="form-label">EndDate</label>
+            <span id="validenddate" class="text-danger"></span>
+        </div>
+
+
+
+
+        <div class="col-2">
+            <button class="btn btn-primary">Submit</button>
+        </div>
+
+
+    </div>
+</form>
+
+@if (Model.CustomerDetailedReportViewModels != null)
+{
+    <div class="row" style="overflow-x:auto">
+        <div class="col-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            Transaction Id
+                        </th>
+                        <th>
+                            Transaction Date
+                        </th>
+                        <th>
+                            Customer Name
+                        </th>
+                        <th>
+                            Amount
+                        </th>
+                        <th>
+                            Category
+                        </th>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+                        <th>
+                            Unit                        
+                        </th>
+                        <th>
+                            Supplier
+                        </th>
+                        <th>
+                            Payment Method
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var items in Model.CustomerDetailedReportViewModels)
+                    {
+                        <tr>
+                            <td>
+                                @items.TransactionId
+                            </td>
+                            <td>
+                                @items.TransactionDate.ToString("yyyy-MM-dd")
+                            </td>
+                            <td>
+                                @items.CustomerName
+                            </td>
+                            <td>
+                                @items.Amount
+                            </td>
+                            <td>
+                                @items.CategoryName
+                            </td>
+                            <td>
+                                @items.ProductName
+                            </td>
+                            <td>
+                                @items.Quantity
+                            </td>
+                            <td>
+                                @items.UnitName
+                            </td>
+                            <td>
+                                @items.SupplierName
+                            </td>
+                            <td>
+                                @Html.Raw((PaymentMethodEnum)items.PaymentMethod)
+                            </td>
+                           
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+<div class="row">
+    <div class="col-12">
+        <button class="btn btn-primary" onclick="print()">Print</button>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        var customerList;
+        $(document).ready(function () {
+            $.ajax({
+                url: '/api/CustomerInfo/getCustomer',
+                data: {},
+                method: 'POST'
+            }).done(function (data) {
+                customerList = data;
+                console.log(customerList);
+            }).fail(function () { });
+        });
+
+
+        $('#customerName').keyup(function () {
+            $('#CustomerList').empty();
+            var name = $('#customerName').val().toLowerCase();
+            var optionList = '';
+            var regularExp = new RegExp('^' + name + '[A-Za-z]*$');
+
+            if (name != '') {
+                $.each(customerList, function (index, value) {
+                    if (value['customerName'].toLowerCase().match(regularExp)) {
+                        // optionList += '<li class="beads" ><div class="info">' + '<span class="dis">' + value['phoneNumber'] + '</span>' + '<span class="dis">' + value['email'] + '</span>' + '<span class="dis">' + value['address'] + '</span></div></li>';
+                        optionList += '<li value="' + value['id'] + '" class="list"' + '>' + value['customerName'] + '</li>';
+                    }
+                });
+                $('#CustomerList').append(optionList);
+            }
+            });
+            
+        $('#cue').click(function () {
+            $('#cue').hide();
+            $('#customerName').focus();
+
+        });
+
+        $('#customerName').focusout(function () {
+            var name = $('#customerName').val();
+
+            if (name == '') {
+                $('#cue').show();
+                $('#CustomerList').empty();
+            }
+        });
+
+        $('#CustomerList').on('click', 'li', function () {
+            debugger;
+            var value = $(this).val();
+            var name = $(this).text();
+            $('#customerId').val(value);
+            $('#customerName').val(name);
+            $('#CustomerList').empty();
+        });
+
+        function print() {
+            var categoryId = $('#CategoryId').val();
+            var productId = $('#ProductId').val();
+            var supplierId = $('#SupplierId').val();
+            var customerId = $('#customerId').val();
+            var paymentMethodId = $('#PaymentMethod').val();
+            var startDate = $('#StartDate').val();
+            var endDate = $('#EndDate').val();
+            window.open('/Report/PrintDetailedReport?categoryId=' + categoryId + '&productId=' + productId + '&supplierId=' + supplierId + '&customerId=' + customerId + '&PaymentMethodId=' + paymentMethodId + '&startDate=' + startDate + '&endDate=' + endDate);
+        }
+    </script>
+}

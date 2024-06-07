@@ -1,0 +1,101 @@
+﻿@model IMS.Modes.ViewModels.StockViewModel
+
+<h2>Stock Information</h2>
+
+<form asp-action="Stock">
+    <div class="row">
+        <div class="col-3">
+            <div class="form-floating">
+                <select asp-for="categoryId" id="CategoryId" class="form-control" asp-items="@(new SelectList(ViewBag.categoryInfo,"Id","CategoryName"))">
+                    <option value="null" selected disabled>-CHOOSE-</option>
+                </select>
+                <label asp-for="categoryId " class="form-label"></label>
+                <span id="ValidCategory"></span>
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="form-floating">
+                <select asp-for="productId" id="ProductId" class="form-control" asp-items="@(new SelectList(ViewBag.productInfo,"Id","ProductName"))">
+                    <option value="null" selected disabled>-CHOOSE-</option>
+                </select>
+                <label asp-for="productId " class="form-label"></label>
+                <span id="ValidProduct"></span>
+            </div>
+        </div>
+
+
+        <div class="col-2">
+            <button type="submit" class="btn btn-primary mt-2">Search</button>
+        </div>
+    </div>
+</form>
+
+
+<div class="row">
+    <div class="col-12">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>S.N.</th>
+                    <th>Category</th>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            @{
+                int count = 1;
+            }
+            <tbody>
+                @foreach(var items in Model.StockInfos)
+                {
+                    <tr>
+                        <td>@count</td>
+                        <td>@items.CategoryInfo.CategoryName</td>
+                        <td>@items.ProductInfo.ProductName</td>
+                        <td>@items.Quantity</td>
+                    </tr>
+                    count = count + 1;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <button class="btn btn-primary" onclick="print()">Print</button>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        $('#CategoryId').change(function () {
+            ChangeProduct();
+        });
+
+        function ChangeProduct() {
+            var categoryId = $('#CategoryId').val();
+            $.ajax({
+                url: '/api/ProductRate/getProduct',
+                data: { CategoryId: categoryId },
+                method: 'POST'
+            }).done(function (data) {
+                console.log(data);
+                optionval = '<option disabled selected> --Choose--</option>';
+                $.each(data['productList'], function (index, value) {
+                    optionval += '<option value="' + value['id'] + '">' + value['productName'] + '</option>';
+                });
+                $('#ProductId').empty();
+                $('#ProductId').append(optionval);
+            }).fail(function () {
+
+            });
+        }
+
+        function print(){
+            var categoryId = $('#CategoryId').val();
+            var productId = $('#ProductId').val();
+            window.open('/Report/StockReport?categoryId=' + categoryId + '&productId=' + productId);
+        }
+    </script>
+}

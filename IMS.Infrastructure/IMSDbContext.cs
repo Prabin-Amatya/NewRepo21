@@ -17,6 +17,7 @@ namespace IMS.Infrastructure
         public IMSDbContext(DbContextOptions<IMSDbContext> options) : base(options) { }
 
         public DbSet<CustomerReportViewModel> CustomerReportViewModels {  get; set; }
+        public DbSet<CustomerDetailedReportViewModel> CustomerDetailedReportViewModels { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new StoreConfiguration());

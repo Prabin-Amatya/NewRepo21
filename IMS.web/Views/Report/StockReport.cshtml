@@ -1,0 +1,49 @@
+﻿@model IEnumerable<IMS.Modes.Entity.StockInfo>
+
+
+<div class="row">
+    <div class="col-12">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>S.N.</th>
+                    <th>Category</th>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            @{
+                int count = 1;
+            }
+            <tbody>
+                @foreach (var items in Model)
+                {
+                    <tr>
+                        <td>@count</td>
+                        <td>@items.CategoryInfo.CategoryName</td>
+                        <td>@items.ProductInfo.ProductName</td>
+                        <td>@items.Quantity</td>
+                    </tr>
+                    count = count + 1;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+@section Scripts {
+
+    <script>
+        window.onload = function () {
+            window.print();
+        }
+
+        window.onafterprint = function () {
+
+            window.close();
+        }
+
+    </script>
+}

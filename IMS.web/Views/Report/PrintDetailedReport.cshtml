@@ -1,0 +1,101 @@
+﻿@model IEnumerable<IMS.Modes.ViewModels.CustomerDetailedReportViewModel>
+@using IMS.Modes.Enum
+
+@if (Model != null)
+{
+    <div class="row" style="overflow-x:auto">
+        <div class="col-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            Transaction Id
+                        </th>
+                        <th>
+                            Transaction Date
+                        </th>
+                        <th>
+                            Customer Name
+                        </th>
+                        <th>
+                            Amount
+                        </th>
+                        <th>
+                            Category
+                        </th>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+                        <th>
+                            Unit
+                        </th>
+                        <th>
+                            Supplier
+                        </th>
+                        <th>
+                            Payment Method
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var items in Model)
+                    {
+                        <tr>
+                            <td>
+                                @items.TransactionId
+                            </td>
+                            <td>
+                                @items.TransactionDate.ToString("yyyy-MM-dd")
+                            </td>
+                            <td>
+                                @items.CustomerName
+                            </td>
+                            <td>
+                                @items.Amount
+                            </td>
+                            <td>
+                                @items.CategoryName
+                            </td>
+                            <td>
+                                @items.ProductName
+                            </td>
+                            <td>
+                                @items.Quantity
+                            </td>
+                            <td>
+                                @items.UnitName
+                            </td>
+                            <td>
+                                @items.SupplierName
+                            </td>
+                            <td>
+                                @Html.Raw((PaymentMethodEnum)items.PaymentMethod)
+                            </td>
+
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@section Scripts {
+
+    <script>
+        window.onload = function () {
+            window.print();
+        }
+
+        window.onafterprint = function () {
+
+            window.close();
+        }
+
+    </script>
+}

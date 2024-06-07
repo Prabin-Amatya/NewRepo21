@@ -3,23 +3,92 @@
 
 <style>
     .list {
+        cursor: pointer;
+        border-radius: 40px;
+        margin-top: 20px;
         border: 1px solid #ffffff42;
         filter: brightness(50%);
         background: #ffffff17;
         list-style-type: none;
-        width: auto;
-        margin-left: -30px;
+        width: 70px;
+        height: 10vh;
+        margin-left: 0;
         color: #d5d5d5e6;
         font-size: 17px;
-        border-bottom: 9px solid azure;
+        border: 3px solid azure;
+        box-shadow: 0px 1px 8px 1px #6f6f6fdb;
+        line-height: 62px;
+        text-align: center;
     }
-    .list:hover{
-        filter: brightness(20%);
+
+    list::before {
+        content: '';
+        height: 10px;
+        width: 10px;
+        background: black;
+
+    }
+
+    list::after {
+        content:''
+    }
+
+        .list:hover {
+            filter: brightness(64%);
+            box-shadow: 0px 2px 19px 3px #af9696db;
         }
 
-    .beads{
+    .bead1 {
+        top: -30px;
+        left: -76px;
+        position: absolute;
+        display: block;
+        cursor: pointer;
+        border-radius: 52px;
+        margin-top: 20px;
+        border: 1px solid #ffffff42;
+        filter: brightness(50%);
+        background: #ffffff17;
         list-style-type: none;
+        width: 91px;
+        height: 13vh;
+        margin-left: 0;
+        color: #d5d5d5e6;
+        font-size: 15px;
+        border: 3px solid azure;
+        line-height: 81px;
+        text-align: center;
     }
+
+    .bead1:hover{
+            box-shadow: 4px 2px #6f6f6fdb;
+    }
+
+    .bead2 {
+        top: -30px;
+        left: 116px;
+        position: absolute;
+        display: block;
+        cursor: pointer;
+        border-radius: 52px;
+        margin-top: 20px;
+        border: 1px solid #ffffff42;
+        filter: brightness(50%);
+        background: #ffffff17;
+        list-style-type: none;
+        width: 91px;
+        height: 13vh;
+        margin-left: 0;
+        color: #d5d5d5e6;
+        font-size: 15px;
+        border: 3px solid azure;
+        line-height: 81px;
+        text-align: center;
+    }
+
+        .bead2:hover {
+            box-shadow: -4px 2px #6f6f6fdb;
+        }
 </style>
 
 <p>Custom Report</p>
@@ -46,7 +115,7 @@
                 <span id="cue" style="position:absolute; top:25px; left:1vw; width:91%; background:white" class="text-md-start">Type A Name</span>
                 <span id="validstartdate" style="color:lightseagreen"></span>
             </div>
-                <ul id="CustomerList">
+                <ul id="CustomerList" style="position: relative">
 
                 </ul>
                 
@@ -160,11 +229,29 @@
                     }
                 </tbody>
             </table>
+            @{
+                double totalamt = 0;
+                double discount = 0;
+                double amount = 0;
+                totalamt = Model.CustomerReportViewModels.Sum(item => item.TotalAmount);
+                discount = Model.CustomerReportViewModels.Sum(item => item.DiscountAmount);
+                amount = Model.CustomerReportViewModels.Sum(item => item.NetAmount);
+            }
+            
         </div>
+        <tfoot>
+            <th>
+                <td colspan="2">Total</td>
+                <td>@amount</td>
+                <td>@discount</td>
+                <td>@totalamt</td>
+                <td colspan="2"></td>
+            </th>
+        </tfoot>
     </div>
 }
 
-@section Scripts{
+@section Scripts {
     <script>
 
         var customerList;
@@ -180,37 +267,37 @@
         });
 
 
-            $('#customerName').keyup(function () {
-                $('#CustomerList').empty();
-                var name = $('#customerName').val().toLowerCase();
-                var optionList = '';
-                var regularExp = new RegExp('^' + name + '[A-Za-z]*$');
+        $('#customerName').keyup(function () {
+            $('#CustomerList').empty();
+            var name = $('#customerName').val().toLowerCase();
+            var optionList = '';
+            var regularExp = new RegExp('^' + name + '[A-Za-z]*$');
 
-                if (name != '') {
-                    $.each(customerList, function (index, value) {
-                        if (value['customerName'].toLowerCase().match(regularExp)) {
-                        optionList += '<li class="beads"></li><li class="beads"></li>';
-                            optionList += '<li value="' + value['id'] + '" class="list"' + '>' + value['customerName'] + '</li>';
-                        }
-                    });
-                }
-                $('#CustomerList').append(optionList);
-            });
+            if (name != '') {
+                $.each(customerList, function (index, value) {
+                    if (value['customerName'].toLowerCase().match(regularExp)) {
+                        optionList += '<span class="bead1" hidden></span><span class="bead2" hidden></span>';
+                        optionList += '<li value="' + value['id'] + '" class="list"' + '>' + value['customerName'] + '</li>';
+                    }
+                });
+            }
+            $('#CustomerList').append(optionList);
+        });
 
         $('#cue').click(function () {
             $('#cue').hide();
             $('#customerName').focus();
-             
+
         });
 
-            $('#customerName').focusout(function () {
-                var name =  $('#customerName').val();
-                
-                if (name == '') {
-                    $('#cue').show();
-                    $('#CustomerList').empty();
-                }
-            });
+        $('#customerName').focusout(function () {
+            var name = $('#customerName').val();
+
+            if (name == '') {
+                $('#cue').show();
+                $('#CustomerList').empty();
+            }
+        });
 
         $('#CustomerList').on('click', 'li', function () {
             debugger;
@@ -220,5 +307,23 @@
             $('#customerName').val(name);
             $('#CustomerList').empty();
         });
+
+
+        $('#CustomerList.list').hover(
+            function () {
+                // Mouse enter
+                debugger;
+                $(this).nextAll('span').slice(0, 2).show();
+            },
+            function () {
+                // Mouse leave (optional if you want to hide the spans when the mouse leaves)
+                debugger;
+                $(this).nextAll('span').slice(0, 2).hide();
+            }
+        );
+       
+ 
+
+
     </script>
 }
